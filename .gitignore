@@ -1,0 +1,16 @@
+.env
+.env.*
+.history/
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.idea/
+.vscode/
+
+# Build artifacts
+node_modules/
+vendor/
+*.log
