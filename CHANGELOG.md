@@ -3,6 +3,31 @@
 All notable changes to **Gravity Recommender** are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [3.1.0-beta] — 2026-05-19
+
+Second iteration based on real-world testing feedback. Scoring model rewritten from "tag-based" to **direct product targeting**, and the admin UI was reorganized into 3 distinct pages.
+
+### Added
+- **Scoring Rules** dedicated admin page (`Recommender → Scoring Rules`). No longer buried inside the setup wizard.
+- **Help** admin page (`Recommender → Help`) with how-it-works, shortcode, filters reference, agency credits and contact info.
+- **Conditions builder** with AND / OR logic — combine multiple form answers in a single rule.
+- **Four effects per rule** : `Boost` (+N points), `Penalize` (−N points), `Exclude` (hard filter), `Require` (only required products are eligible).
+- **Auto-detection of hidden fields** in the configured Gravity Form. One field → selected automatically. Multiple → user picks. Zero → instructions to add one.
+- **Restricted-answer fields only** — rule builder ignores free-text fields, only exposes radio/dropdown/checkbox/multiselect with their actual choices.
+- **Affiliate CTA when Gravity Forms is missing** — wizard halts gracefully with a `Get Gravity Forms` button (filter `gr_gravityforms_affiliate_url` for the URL).
+- **AI fallback hook** (`gr_ai_fallback_recommendation`) — architecture-ready for plugging an AI service when no rule matches. No built-in implementation.
+
+### Changed
+- **Scoring engine rewritten** — rules now target products **by ID** directly instead of going through tags. More intuitive and easier to author.
+- **Onboarding reordered** : Welcome → Source → **Products** → Form → Done. Products must exist before the user can wire form answers to them.
+- **Setup wizard slimmed to 5 visible steps** (was 5 steps + buried rules step) — scoring rules have their own page now.
+- **Example form replaced** — generic *SaaS Plan Picker* (3 questions, 3 plans) instead of the hosting-specific Collectif HUB form.
+- **CPT product placeholders genericized** — no more hosting-themed defaults.
+
+### Removed
+- `_gr_tags` post meta — products are no longer tagged. Existing values are ignored by the engine.
+- Tag-matching code path in the recommendation engine.
+
 ## [3.0.0-beta] — 2026-05-19
 
 Major rewrite: the plugin is now a **general-purpose** Gravity Forms product recommender. The previous 2.x line was hardcoded for a specific hosting catalog (Collectif HUB) and is no longer maintained on `main`.

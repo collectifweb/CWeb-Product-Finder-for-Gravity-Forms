@@ -33,15 +33,17 @@ gravity-recommender/
 ├── readme.txt                          # wordpress.org-format readme
 ├── includes/
 │   ├── class-product-cpt.php           # CPT `gr_product` + meta box
-│   ├── class-product-source.php        # Interface + factory
+│   ├── class-product-source.php        # Source interface + factory
 │   ├── class-cpt-source.php            # Source impl: built-in CPT
 │   ├── class-woo-source.php            # Source impl: WooCommerce
-│   ├── class-recommendation-engine.php # Tag-based scoring
+│   ├── class-recommendation-engine.php # Rule-based scoring (direct product targeting)
 │   ├── class-gf-integration.php        # Hooks gform_entry_post_save + gform_confirmation
 │   ├── class-shortcode-handler.php     # Shortcode [gravity_recommender]
-│   └── class-admin-onboarding.php      # 5-step setup wizard
+│   ├── class-admin-onboarding.php      # 5-step setup wizard
+│   ├── class-admin-rules.php           # Dedicated Scoring Rules page
+│   └── class-admin-help.php            # Help & About page
 ├── templates/
-│   └── example-form.json               # GF export, importable from the wizard
+│   └── example-form.json               # Sample GF (SaaS Plan Picker)
 └── assets/
     └── css/
         └── product-cards.css           # `.gr-*` scoped styles, theme via CSS vars
@@ -59,28 +61,38 @@ gravity-recommender/
 | `_gr_page_url`    | url     | Product page                                       |
 | `_gr_payment_url` | url     | Cart / checkout link (falls back to `page_url`)    |
 | `_gr_cta_label`   | string  | Button label (default "Add to cart")               |
-| `_gr_tags`        | string  | Comma-separated tag list, lowercased on read       |
 
 ### Product (WooCommerce)
 
-The WooCommerce source reads native Woo fields (title, price HTML, image, add-to-cart URL) and treats the WooCommerce **product tags taxonomy** (`product_tag`) as the source of scoring tags.
+The WooCommerce source reads native Woo fields (title, price HTML, image, add-to-cart URL). Products are referenced in rules by their post ID directly — no taxonomy involved.
 
 ### Scoring rules — option `gr_scoring_rules`
 
-Stored as an array of rule rows:
+Each rule pairs a list of **conditions** (combined with AND or OR) with a list of **effects** that target specific products by ID:
 
 ```php
 [
     [
-        'field_id' => '20',          // Gravity Form field ID (string)
-        'match'    => '20000',       // substring matched case-insensitively
-        'action'   => 'boost',       // boost | exclude | require
-        'tag'      => 'high-traffic',
-        'points'   => 20,            // used for boost only
+        'id'              => 'rule_xyz',
+        'name'            => 'Team of 1, low budget → push Starter',
+        'condition_logic' => 'all', // 'all' (AND) or 'any' (OR)
+        'conditions'      => [
+            ['field_id' => '1', 'operator' => 'equals',  'value' => 'solo'],
+            ['field_id' => '3', 'operator' => 'equals',  'value' => 'low'],
+        ],
+        'effects' => [
+            ['action' => 'boost',   'product_id' => 42, 'points' => 30],
+            ['action' => 'penalty', 'product_id' => 99, 'points' => 15],
+            ['action' => 'exclude', 'product_id' => 17, 'points' => 0],
+            ['action' => 'require', 'product_id' => 42, 'points' => 0],
+        ],
     ],
-    ...
 ]
 ```
+
+Supported condition operators: `equals` (case-insensitive equality, with checkbox sub-field handling), `not_equals`, `contains` (substring), `not_empty`.
+
+The rule builder in the admin UI only exposes Gravity Forms fields with restricted answers (radio, dropdown, checkbox, multiselect) and pre-populates the value selector with that field's actual choices.
 
 ### Form configuration — option `gr_form_config`
 
@@ -98,14 +110,20 @@ Stored as an array of rule rows:
 ## Scoring algorithm
 
 1. Initialize every product to score 0.
-2. For each rule, fetch the relevant field's value from the GF entry (concatenating sub-fields for checkbox-type fields, e.g. `21.1`, `21.2`).
-3. If the rule's `match` substring is found in the answer:
-   - `boost` → add `points` to every product carrying the tag.
-   - `exclude` → subtract 10,000 from every product carrying the tag (effectively hard-filter).
-   - `require` → add 1,000 to products carrying the tag, subtract 1,000 from those without (hard preference).
-4. Sort by score descending.
-5. Drop products hard-excluded.
-6. Return the top product, plus the next two as alternatives.
+2. For each rule:
+   - Evaluate every condition against the GF entry (concatenating sub-fields for checkbox-type values, e.g. `2.1`, `2.2`).
+   - If `condition_logic = 'all'`, the rule matches when every condition is true; if `'any'`, when at least one is true.
+3. When a rule matches, apply each of its effects to the specified product:
+   - `boost` → add `points` to that product's score.
+   - `penalty` → subtract `points` from that product's score.
+   - `exclude` → mark the product as hard-filtered.
+   - `require` → mark the product as required.
+4. Apply hard filters:
+   - Drop excluded products.
+   - If at least one product is required, drop every non-required product too.
+5. Sort the eligible products by score descending (ties broken by post ID for stability).
+6. If no product is eligible, run the `gr_ai_fallback_recommendation` filter — if a plugged-in AI returns a recommendation, use it; otherwise fall through to the error message.
+7. Return the top product plus the next two as alternatives.
 
 ## Result format
 
@@ -123,13 +141,15 @@ This is written verbatim into the hidden GF field configured at setup. The short
 
 ## Filters
 
-| Filter                            | Purpose                                                  |
-|-----------------------------------|----------------------------------------------------------|
-| `gr_form_id`                      | Override the listened Gravity Form ID                    |
-| `gr_field_id`                     | Override the hidden field that stores the JSON           |
-| `gr_recommendation_explanation`   | Replace the default explanation copy                     |
-| `gr_card_disclaimer`              | Inject a disclaimer line under the cards (defaults empty)|
-| `gr_fallback_contact_url`         | URL used on the error fallback "Contact us" button       |
+| Filter                              | Purpose                                                            |
+|-------------------------------------|--------------------------------------------------------------------|
+| `gr_form_id`                        | Override the listened Gravity Form ID                              |
+| `gr_field_id`                       | Override the hidden field that stores the JSON                     |
+| `gr_recommendation_explanation`     | Replace the default "Based on your answers..." copy                |
+| `gr_ai_fallback_recommendation`     | Plug an AI service to pick a product when no rule matches          |
+| `gr_card_disclaimer`                | Inject a disclaimer line under the cards (defaults to empty)       |
+| `gr_fallback_contact_url`           | URL used on the error fallback "Contact us" button                 |
+| `gr_gravityforms_affiliate_url`     | URL used by the "Get Gravity Forms" CTA on step 1 of the wizard    |
 
 ## Requirements
 
@@ -140,8 +160,8 @@ This is written verbatim into the hidden GF field configured at setup. The short
 
 ## Customizing for your site
 
-1. **Add products** under **Recommender → All Products** (CPT) or **Products** (WooCommerce). Tag each product with the keywords you'll match against in your rules.
-2. **Run the setup wizard** at **Recommender → Setup** to pick the form, the hidden field, and define rules.
+1. **Add products** under **Recommender → All Products** (CPT) or **Products** (WooCommerce). Each rule will reference these products directly by ID.
+2. **Run the setup wizard** at **Recommender → Setup** to pick the source, products, the form, and the hidden field. Then go to **Recommender → Scoring Rules** to define the "When → Then" rules.
 3. **Override styling** by setting CSS variables in your theme:
    ```css
    :root {

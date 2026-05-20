@@ -3,16 +3,15 @@
  * Custom Post Type `gr_product` — produits recommandables natifs au plugin.
  *
  * Les champs métier sont stockés en post-meta :
- *   - _gr_price_label  : libellé prix affiché (texte libre, ex. "12$/mois")
+ *   - _gr_price_label  : libellé prix affiché (texte libre, ex. "$29 / month")
  *   - _gr_features     : liste de features, une par ligne
  *   - _gr_description  : description courte
  *   - _gr_page_url     : URL de la fiche produit
  *   - _gr_payment_url  : URL de paiement / panier
  *   - _gr_cta_label    : libellé du bouton (défaut "Add to cart")
- *   - _gr_tags         : tags libres, séparés par virgules (ex. "ecommerce, high-traffic, cheap")
  *
- * Ces tags sont matchés contre les règles définies dans l'admin :
- * « si la réponse X au champ GF #N, alors booster (ou exclure) les produits taggés Y ».
+ * Les règles de scoring (voir page Scoring Rules) ciblent directement les
+ * produits par leur ID — pas besoin de tagger les produits.
  */
 
 if (!defined('ABSPATH')) {
@@ -84,39 +83,36 @@ class GR_Product_CPT {
             <tr>
                 <th><label for="gr_price_label"><?php esc_html_e('Price label', 'gravity-recommender'); ?></label></th>
                 <td>
-                    <input type="text" name="gr_price_label" id="gr_price_label" value="<?php echo esc_attr($values['price_label']); ?>" placeholder="$12 / month" />
-                    <span class="gr-meta-hint"><?php esc_html_e('Free-form. Displayed on the product card.', 'gravity-recommender'); ?></span>
+                    <input type="text" name="gr_price_label" id="gr_price_label" value="<?php echo esc_attr($values['price_label']); ?>" placeholder="$29 / month" />
+                    <span class="gr-meta-hint"><?php esc_html_e('Free-form text shown on the product card. Example: "$29 / month" or "From $99".', 'gravity-recommender'); ?></span>
                 </td>
             </tr>
             <tr>
                 <th><label for="gr_description"><?php esc_html_e('Short description', 'gravity-recommender'); ?></label></th>
-                <td><textarea name="gr_description" id="gr_description" rows="2"><?php echo esc_textarea($values['description']); ?></textarea></td>
+                <td>
+                    <textarea name="gr_description" id="gr_description" rows="2" placeholder="<?php esc_attr_e('A one-line pitch shown below the features.', 'gravity-recommender'); ?>"><?php echo esc_textarea($values['description']); ?></textarea>
+                </td>
             </tr>
             <tr>
                 <th><label for="gr_features"><?php esc_html_e('Features (one per line)', 'gravity-recommender'); ?></label></th>
-                <td><textarea name="gr_features" id="gr_features" rows="5" placeholder="2 CPU&#10;4 GB RAM&#10;Unlimited bandwidth"><?php echo esc_textarea($values['features']); ?></textarea></td>
+                <td>
+                    <textarea name="gr_features" id="gr_features" rows="5" placeholder="Up to 3 users&#10;5 GB storage&#10;Priority email support"><?php echo esc_textarea($values['features']); ?></textarea>
+                </td>
             </tr>
             <tr>
                 <th><label for="gr_page_url"><?php esc_html_e('Product page URL', 'gravity-recommender'); ?></label></th>
-                <td><input type="url" name="gr_page_url" id="gr_page_url" value="<?php echo esc_attr($values['page_url']); ?>" /></td>
+                <td><input type="url" name="gr_page_url" id="gr_page_url" value="<?php echo esc_attr($values['page_url']); ?>" placeholder="https://example.com/plan/starter" /></td>
             </tr>
             <tr>
                 <th><label for="gr_payment_url"><?php esc_html_e('Payment / cart URL', 'gravity-recommender'); ?></label></th>
                 <td>
-                    <input type="url" name="gr_payment_url" id="gr_payment_url" value="<?php echo esc_attr($values['payment_url']); ?>" />
+                    <input type="url" name="gr_payment_url" id="gr_payment_url" value="<?php echo esc_attr($values['payment_url']); ?>" placeholder="https://example.com/checkout?plan=starter" />
                     <span class="gr-meta-hint"><?php esc_html_e('Used by the CTA button. Falls back to the page URL if empty.', 'gravity-recommender'); ?></span>
                 </td>
             </tr>
             <tr>
                 <th><label for="gr_cta_label"><?php esc_html_e('CTA button label', 'gravity-recommender'); ?></label></th>
                 <td><input type="text" name="gr_cta_label" id="gr_cta_label" value="<?php echo esc_attr($values['cta_label']); ?>" placeholder="<?php esc_attr_e('Add to cart', 'gravity-recommender'); ?>" /></td>
-            </tr>
-            <tr>
-                <th><label for="gr_tags"><?php esc_html_e('Tags (comma-separated)', 'gravity-recommender'); ?></label></th>
-                <td>
-                    <input type="text" name="gr_tags" id="gr_tags" value="<?php echo esc_attr($values['tags']); ?>" placeholder="ecommerce, high-traffic, budget" />
-                    <span class="gr-meta-hint"><?php esc_html_e('Used by the scoring engine to match form answers. Define your own tag vocabulary in the admin.', 'gravity-recommender'); ?></span>
-                </td>
             </tr>
         </table>
         <?php
@@ -140,7 +136,6 @@ class GR_Product_CPT {
             'gr_page_url'    => ['key' => '_gr_page_url',    'sanitizer' => 'esc_url_raw'],
             'gr_payment_url' => ['key' => '_gr_payment_url', 'sanitizer' => 'esc_url_raw'],
             'gr_cta_label'   => ['key' => '_gr_cta_label',   'sanitizer' => 'sanitize_text_field'],
-            'gr_tags'        => ['key' => '_gr_tags',        'sanitizer' => 'sanitize_text_field'],
         ];
 
         foreach ($fields as $form_key => $config) {
@@ -152,9 +147,6 @@ class GR_Product_CPT {
         }
     }
 
-    /**
-     * Retourne tous les meta d'un produit (avec defaults).
-     */
     public static function get_meta_values(int $post_id): array {
         return [
             'price_label' => (string) get_post_meta($post_id, '_gr_price_label', true),
@@ -163,19 +155,6 @@ class GR_Product_CPT {
             'page_url'    => (string) get_post_meta($post_id, '_gr_page_url', true),
             'payment_url' => (string) get_post_meta($post_id, '_gr_payment_url', true),
             'cta_label'   => (string) get_post_meta($post_id, '_gr_cta_label', true),
-            'tags'        => (string) get_post_meta($post_id, '_gr_tags', true),
         ];
-    }
-
-    /**
-     * Retourne les tags d'un produit sous forme d'array normalisé (lowercase, trimmed).
-     */
-    public static function get_tags(int $post_id): array {
-        $raw = (string) get_post_meta($post_id, '_gr_tags', true);
-        if ($raw === '') {
-            return [];
-        }
-        $tags = array_map('trim', explode(',', strtolower($raw)));
-        return array_values(array_filter($tags));
     }
 }

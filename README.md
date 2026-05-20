@@ -46,20 +46,28 @@ See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the full design.
 
 1. Drop the [`gravity-recommender/`](gravity-recommender/) folder into `wp-content/plugins/`.
 2. Activate **Gravity Recommender** in WordPress.
-3. Go to **Recommender → Setup** and follow the 5-step wizard:
-   1. Welcome / dependency check
+3. Go to **Recommender → Setup** and follow the wizard:
+   1. Welcome / dependency check (Gravity Forms required)
    2. Pick the product source (CPT or WooCommerce)
-   3. Select your Gravity Form (or import the example one shipped with the plugin)
-   4. Define scoring rules (field answers → product tags)
+   3. Add at least one product (link to the editor opens in a new tab)
+   4. Pick your Gravity Form and confirm the hidden field (auto-detected when possible)
    5. Grab the shortcode and paste it into the form confirmation
+4. Head to **Recommender → Scoring Rules** to define your "When → Then" rules.
 
 ## The scoring model
 
-Every product carries a list of **tags** (free-form, e.g. `ecommerce`, `high-traffic`, `cheap`, `pro-managed`). Every **rule** says:
+Each rule is a clear **"When → Then"**:
 
-> If the answer to field `#N` contains `X`, then **BOOST** / **EXCLUDE** / **REQUIRE** products tagged `Y` (by `P` points, if boosting).
+> **When** the form answers match these conditions (combined with AND or OR),
+> **Then** apply these effects to specific products :
+> - **Boost** : add N points to product P
+> - **Penalize** : subtract N points from product P
+> - **Exclude** : remove product P from candidates (hard filter)
+> - **Require** : if any rule requires a product, only required products are eligible
 
-That's it. The engine sums boosts across all matching rules, applies exclusions and requirements as hard filters, sorts, and returns the top product plus two alternatives.
+Conditions only see fields with restricted answers — radio, dropdown, checkbox, multi-select. Free-text inputs are ignored on purpose (no surprises from unpredictable input). The rule builder auto-detects your form's fields and their choices.
+
+The engine sums boosts/penalties across all matched rules, applies excludes and requires as hard filters, and returns the highest-scoring product plus two alternatives.
 
 ## Configuration
 

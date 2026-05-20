@@ -4,26 +4,30 @@ Tags: gravity forms, recommendation, product finder, scoring, quiz
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 8.0
-Stable tag: 3.0.0-beta
+Stable tag: 3.1.0-beta
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Plug a tag-based product recommender at the end of any Gravity Forms questionnaire. No external API. Works with built-in CPT or WooCommerce.
+Recommend products at the end of a Gravity Forms questionnaire. Rules-based scoring, no external API. Works with built-in CPT or WooCommerce.
 
 == Description ==
 
 Gravity Recommender turns a Gravity Forms questionnaire into a product picker. At the end of the form, the plugin scores each of your products against the visitor's answers and displays the best match (plus a couple of alternatives) as styled cards.
 
-The scoring engine is fully local PHP — no OpenAI, no Claude, no remote service. The logic lives in a tag-based rules system you configure from WordPress admin: "if the answer to field #20 contains '20 000', boost products tagged `high-traffic` by 20 points".
+The scoring engine is fully local PHP — no OpenAI, no Claude, no remote service. You define rules in a clear "When → Then" admin UI: when the visitor's answers match certain conditions, boost / penalize / exclude / require specific products.
 
 = Highlights =
 
-* **Two product sources** — bring your own catalog as a native CPT (Recommended Products) or use your existing WooCommerce products.
-* **Tag-based scoring** — define an open vocabulary of tags, attach them to products, then map form answers to tag boosts / exclusions / requirements. No code required.
+* **Two product sources** — built-in Recommended Products CPT, or your existing WooCommerce catalog.
+* **Direct product targeting** — rules pick the products they affect by ID, no tag indirection. Auto-completed from your form's actual fields and choices.
+* **AND / OR conditions** — combine multiple form answers in a single rule.
+* **Four effects** — Boost (+N points), Penalize (−N points), Exclude (hard filter), Require (only required products are eligible).
 * **No external API** — all scoring happens on your server. Predictable, free, and private.
-* **Setup wizard** — 5-step guided onboarding from a fresh install to a working recommender.
-* **Example form included** — import a ready-made Gravity Form to start tinkering immediately.
+* **Setup wizard** + dedicated **Scoring Rules** and **Help** admin pages.
+* **Hidden field auto-detection** — the plugin scans your form for hidden fields and picks the right one (or asks if there are several).
+* **Example form included** — a small SaaS Plan Picker you can import and start tinkering with right away.
 * **Theme-friendly CSS** — all classes prefixed `.gr-*`, with CSS variables for colors and fonts.
+* **AI fallback hook** — `gr_ai_fallback_recommendation` filter lets you plug an AI service for ambiguous cases. No built-in API call.
 
 = Typical use cases =
 
@@ -75,6 +79,17 @@ Recommendation rules: `wp_options` (`gr_scoring_rules`, `gr_form_config`, `gr_pr
 4. Sample recommendation cards on the form confirmation page.
 
 == Changelog ==
+
+= 3.1.0-beta =
+* Scoring engine rewritten: rules target products directly by ID (no more tag indirection).
+* New conditions builder with AND / OR logic and four effects per rule (Boost / Penalize / Exclude / Require).
+* New dedicated "Scoring Rules" admin page.
+* New "Help" admin page (how-it-works, shortcode, filters, credits).
+* Hidden field auto-detection in the setup wizard.
+* Wizard restructured: products are added before the form is wired.
+* Graceful flow when Gravity Forms is missing (install/buy CTA, no broken state).
+* Example form replaced with a generic SaaS Plan Picker.
+* `gr_ai_fallback_recommendation` filter for plugging an optional AI fallback.
 
 = 3.0.0-beta =
 * Complete rewrite for general-purpose use (was previously hosting-specific).
