@@ -3,6 +3,22 @@
 All notable changes to **Gravity Recommender** are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [3.1.1-beta] — 2026-05-19
+
+Hotfix release that addresses real-world testing feedback and the WordPress.org Plugin Checker.
+
+### Fixed
+- **Critical fatal on Setup step 3 ("Products")** — `GR_CPT_Source` was still calling `GR_Product_CPT::get_tags()`, which was removed in 3.1.0 along with the tag-based engine. Restored full compatibility.
+- Removed leftover `tags` field from the product source interface, `GR_CPT_Source`, and `GR_Woo_Source`.
+
+### Changed — WordPress.org compliance
+- Dropped `load_plugin_textdomain()` call — discouraged since WP 4.6; wordpress.org auto-loads translations.
+- Added `languages/` folder with a README so the `Domain Path` header points to an existing directory.
+- `translators:` comments moved to sit immediately above the `__()` call (Help page Credits block).
+- Switched `class-product-cpt.php` save logic from dynamic `call_user_func` sanitizer to per-field explicit `sanitize_text_field(wp_unslash(...))` chains so static analysis can verify them.
+- `class-admin-rules.php` now deep-unslashes the submitted rules array with `map_deep + sanitize_text_field` before parsing.
+- `class-admin-onboarding.php` unslashes `$_POST['gr_form_id']` and properly handles `$_GET` reads (wizard step + flash messages) with explicit `phpcs:ignore` comments on display-only paths after a `wp_safe_redirect`.
+
 ## [3.1.0-beta] — 2026-05-19
 
 Second iteration based on real-world testing feedback. Scoring model rewritten from "tag-based" to **direct product targeting**, and the admin UI was reorganized into 3 distinct pages.

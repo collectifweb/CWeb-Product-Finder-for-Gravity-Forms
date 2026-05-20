@@ -95,8 +95,8 @@ class GR_Admin_Onboarding {
                 break;
 
             case 'save_form_config':
-                $form_id  = (int) ($_POST['gr_form_id'] ?? 0);
-                $field_id = sanitize_text_field(wp_unslash($_POST['gr_field_id'] ?? ''));
+                $form_id  = isset($_POST['gr_form_id']) ? (int) wp_unslash($_POST['gr_form_id']) : 0;
+                $field_id = isset($_POST['gr_field_id']) ? sanitize_text_field(wp_unslash($_POST['gr_field_id'])) : '';
                 update_option(self::OPTION_FORM_CONFIG, ['form_id' => $form_id, 'field_id' => $field_id]);
                 $this->redirect_to_step(5);
                 break;
@@ -124,7 +124,10 @@ class GR_Admin_Onboarding {
     }
 
     public function render_page(): void {
-        $step = isset($_GET['step']) ? max(1, min(5, (int) $_GET['step'])) : (int) get_option(self::OPTION_STEP, 1);
+        // The wizard step selector is purely cosmetic navigation and clamped to 1-5.
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        $step_raw = isset($_GET['step']) ? (int) wp_unslash($_GET['step']) : (int) get_option(self::OPTION_STEP, 1);
+        $step = max(1, min(5, $step_raw));
         $this->render_header($step);
 
         switch ($step) {
@@ -188,9 +191,12 @@ class GR_Admin_Onboarding {
     }
 
     private function render_flash_messages(): void {
+        // Read-only flash key set by our own wp_safe_redirect — display-only, no state change.
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         if (empty($_GET['msg'])) {
             return;
         }
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         $msg = sanitize_text_field(wp_unslash($_GET['msg']));
         $messages = [
             'form_imported'      => ['success', __('Example form imported. Select it below.', 'gravity-recommender')],

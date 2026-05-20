@@ -2,11 +2,8 @@
 /**
  * Source de produits basée sur WooCommerce.
  *
- * Les tags Gravity Recommender sont stockés sous forme de tags WooCommerce
- * (taxonomy `product_tag`). Le moteur les utilise pour matcher les réponses
- * du formulaire.
- *
- * Cette source ne s'active que si WooCommerce est actif.
+ * Les règles de scoring référencent les produits WooCommerce directement par
+ * leur post ID. Cette source ne s'active que si WooCommerce est actif.
  */
 
 if (!defined('ABSPATH')) {
@@ -59,11 +56,6 @@ class GR_Woo_Source implements GR_Product_Source {
     private function normalize_product($product): array {
         $id = $product->get_id();
 
-        $tag_terms = wp_get_post_terms($id, 'product_tag', ['fields' => 'names']);
-        $tags = is_array($tag_terms)
-            ? array_values(array_filter(array_map(fn($t) => strtolower(trim((string) $t)), $tag_terms)))
-            : [];
-
         $features_meta = (string) get_post_meta($id, '_gr_features', true);
         if ($features_meta === '') {
             // Fallback : attributs visibles WooCommerce
@@ -100,7 +92,6 @@ class GR_Woo_Source implements GR_Product_Source {
             'page_url'    => get_permalink($id) ?: '',
             'payment_url' => $payment_url,
             'cta_label'   => $cta_label,
-            'tags'        => $tags,
             'image_url'   => $image_url ?: '',
         ];
     }

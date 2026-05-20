@@ -47,7 +47,12 @@ class GR_Admin_Rules {
         }
         check_admin_referer('gr_save_rules');
 
-        $rules = $this->parse_submitted_rules($_POST['gr_rules'] ?? []);
+        // Deep-unslash the whole rules array; per-field sanitization happens in parse_submitted_rules().
+        $raw_rules = isset($_POST['gr_rules']) && is_array($_POST['gr_rules'])
+            ? map_deep(wp_unslash($_POST['gr_rules']), 'sanitize_text_field')
+            : [];
+
+        $rules = $this->parse_submitted_rules($raw_rules);
         update_option(self::OPTION, $rules);
 
         wp_safe_redirect(add_query_arg('saved', '1', admin_url('edit.php?post_type=' . GR_Product_CPT::POST_TYPE . '&page=' . self::PAGE_SLUG)));
@@ -65,7 +70,11 @@ class GR_Admin_Rules {
         <div class="wrap gr-rules">
             <h1 class="wp-heading-inline"><?php esc_html_e('Scoring Rules', 'gravity-recommender'); ?></h1>
 
-            <?php if (!empty($_GET['saved'])): ?>
+            <?php
+            // Display-only success message after wp_safe_redirect from handle_save(). No state change → no nonce needed.
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+            if (!empty($_GET['saved'])):
+            ?>
                 <div class="notice notice-success is-dismissible"><p><?php esc_html_e('Rules saved.', 'gravity-recommender'); ?></p></div>
             <?php endif; ?>
 

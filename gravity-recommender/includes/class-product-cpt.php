@@ -129,21 +129,25 @@ class GR_Product_CPT {
             return;
         }
 
-        $fields = [
-            'gr_price_label' => ['key' => '_gr_price_label', 'sanitizer' => 'sanitize_text_field'],
-            'gr_description' => ['key' => '_gr_description', 'sanitizer' => 'sanitize_textarea_field'],
-            'gr_features'    => ['key' => '_gr_features',    'sanitizer' => 'sanitize_textarea_field'],
-            'gr_page_url'    => ['key' => '_gr_page_url',    'sanitizer' => 'esc_url_raw'],
-            'gr_payment_url' => ['key' => '_gr_payment_url', 'sanitizer' => 'esc_url_raw'],
-            'gr_cta_label'   => ['key' => '_gr_cta_label',   'sanitizer' => 'sanitize_text_field'],
-        ];
-
-        foreach ($fields as $form_key => $config) {
-            if (!isset($_POST[$form_key])) {
-                continue;
-            }
-            $raw = wp_unslash($_POST[$form_key]);
-            update_post_meta($post_id, $config['key'], call_user_func($config['sanitizer'], $raw));
+        // Sanitization is explicit per field so static analyzers (and reviewers)
+        // can verify the chain wp_unslash → sanitize_*.
+        if (isset($_POST['gr_price_label'])) {
+            update_post_meta($post_id, '_gr_price_label', sanitize_text_field(wp_unslash($_POST['gr_price_label'])));
+        }
+        if (isset($_POST['gr_description'])) {
+            update_post_meta($post_id, '_gr_description', sanitize_textarea_field(wp_unslash($_POST['gr_description'])));
+        }
+        if (isset($_POST['gr_features'])) {
+            update_post_meta($post_id, '_gr_features', sanitize_textarea_field(wp_unslash($_POST['gr_features'])));
+        }
+        if (isset($_POST['gr_page_url'])) {
+            update_post_meta($post_id, '_gr_page_url', esc_url_raw(wp_unslash($_POST['gr_page_url'])));
+        }
+        if (isset($_POST['gr_payment_url'])) {
+            update_post_meta($post_id, '_gr_payment_url', esc_url_raw(wp_unslash($_POST['gr_payment_url'])));
+        }
+        if (isset($_POST['gr_cta_label'])) {
+            update_post_meta($post_id, '_gr_cta_label', sanitize_text_field(wp_unslash($_POST['gr_cta_label'])));
         }
     }
 

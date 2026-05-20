@@ -42,12 +42,9 @@ class GR_CPT_Source implements GR_Product_Source {
 
     private function normalize_post(WP_Post $post): array {
         $meta = GR_Product_CPT::get_meta_values($post->ID);
-        $tags = GR_Product_CPT::get_tags($post->ID);
 
         $features = array_values(array_filter(array_map('trim', preg_split('/\r\n|\r|\n/', $meta['features']))));
-
         $payment_url = $meta['payment_url'] !== '' ? $meta['payment_url'] : $meta['page_url'];
-
         $thumbnail = get_the_post_thumbnail_url($post->ID, 'medium');
 
         return [
@@ -59,7 +56,6 @@ class GR_CPT_Source implements GR_Product_Source {
             'page_url'    => $meta['page_url'],
             'payment_url' => $payment_url,
             'cta_label'   => $meta['cta_label'] !== '' ? $meta['cta_label'] : __('Add to cart', 'gravity-recommender'),
-            'tags'        => $tags,
             'image_url'   => $thumbnail ?: '',
         ];
     }

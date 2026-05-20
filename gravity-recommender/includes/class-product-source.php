@@ -15,7 +15,6 @@
  *     'page_url'    => string,
  *     'payment_url' => string,
  *     'cta_label'   => string,
- *     'tags'        => string[], // tags normalisés (lowercase, trimmed)
  *     'image_url'   => string,
  *   ]
  */

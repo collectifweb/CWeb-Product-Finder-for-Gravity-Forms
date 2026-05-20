@@ -4,7 +4,7 @@ Tags: gravity forms, recommendation, product finder, scoring, quiz
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 8.0
-Stable tag: 3.1.0-beta
+Stable tag: 3.1.1-beta
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -79,6 +79,10 @@ Recommendation rules: `wp_options` (`gr_scoring_rules`, `gr_form_config`, `gr_pr
 4. Sample recommendation cards on the form confirmation page.
 
 == Changelog ==
+
+= 3.1.1-beta =
+* Hotfix: critical fatal error on Setup step 3 ("Products") — the CPT product source was calling a method removed in 3.1.0.
+* WordPress.org Plugin Checker compliance: removed `load_plugin_textdomain()` (auto-loaded since WP 4.6), added `languages/` folder, fixed `translators:` comment placement, switched to explicit per-field `wp_unslash() + sanitize_*()` chains across all admin pages.
 
 = 3.1.0-beta =
 * Scoring engine rewritten: rules target products directly by ID (no more tag indirection).

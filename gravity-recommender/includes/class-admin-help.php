@@ -103,12 +103,11 @@ class GR_Admin_Help {
                     <h2><?php esc_html_e('Credits & contact', 'gravity-recommender'); ?></h2>
                     <p>
                         <?php
+                        /* translators: %1$s is the agency link, %2$s is the contact email link */
+                        $credits_template = __('Built by %1$s. Contact: %2$s.', 'gravity-recommender');
+                        $allowed_html = ['a' => ['href' => [], 'target' => [], 'rel' => []], 'strong' => []];
                         printf(
-                            /* translators: %1$s is the agency link, %2$s is the contact email link */
-                            wp_kses(
-                                __('Built by %1$s. Contact: %2$s.', 'gravity-recommender'),
-                                ['a' => ['href' => [], 'target' => [], 'rel' => []]]
-                            ),
+                            wp_kses($credits_template, $allowed_html),
                             '<a href="https://collectif-web.ca" target="_blank" rel="noopener"><strong>Collectif WEB</strong></a>',
                             '<a href="mailto:alexandre@collectifweb.ca">alexandre@collectifweb.ca</a>'
                         );
@@ -116,12 +115,10 @@ class GR_Admin_Help {
                     </p>
                     <p>
                         <?php
+                        /* translators: %s is the GitHub repo link */
+                        $github_template = __('Want to contribute or report a bug? Head over to the %s.', 'gravity-recommender');
                         printf(
-                            /* translators: %s is the GitHub repo link */
-                            wp_kses(
-                                __('Want to contribute or report a bug? Head over to the %s.', 'gravity-recommender'),
-                                ['a' => ['href' => [], 'target' => [], 'rel' => []]]
-                            ),
+                            wp_kses($github_template, $allowed_html),
                             '<a href="https://github.com/collectifweb/Gravity-Recommender_wp-plugin" target="_blank" rel="noopener">GitHub repo</a>'
                         );
                         ?>
