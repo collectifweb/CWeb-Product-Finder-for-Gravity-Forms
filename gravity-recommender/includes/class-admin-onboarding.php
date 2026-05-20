@@ -95,7 +95,7 @@ class GR_Admin_Onboarding {
                 break;
 
             case 'save_form_config':
-                $form_id  = isset($_POST['gr_form_id']) ? (int) wp_unslash($_POST['gr_form_id']) : 0;
+                $form_id  = isset($_POST['gr_form_id']) ? absint(wp_unslash($_POST['gr_form_id'])) : 0;
                 $field_id = isset($_POST['gr_field_id']) ? sanitize_text_field(wp_unslash($_POST['gr_field_id'])) : '';
                 update_option(self::OPTION_FORM_CONFIG, ['form_id' => $form_id, 'field_id' => $field_id]);
                 $this->redirect_to_step(5);
@@ -126,7 +126,7 @@ class GR_Admin_Onboarding {
     public function render_page(): void {
         // The wizard step selector is purely cosmetic navigation and clamped to 1-5.
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-        $step_raw = isset($_GET['step']) ? (int) wp_unslash($_GET['step']) : (int) get_option(self::OPTION_STEP, 1);
+        $step_raw = isset($_GET['step']) ? absint(wp_unslash($_GET['step'])) : (int) get_option(self::OPTION_STEP, 1);
         $step = max(1, min(5, $step_raw));
         $this->render_header($step);
 

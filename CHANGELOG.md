@@ -3,6 +3,11 @@
 All notable changes to **Gravity Recommender** are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [3.1.2-beta] — 2026-05-19
+
+### Fixed — WordPress.org Plugin Checker
+- Replaced `(int) wp_unslash($_POST['gr_form_id'])` and `(int) wp_unslash($_GET['step'])` with `absint(wp_unslash(...))`. Static analyzers don't accept type casts as sanitization, even though the result is identical for our use.
+
 ## [3.1.1-beta] — 2026-05-19
 
 Hotfix release that addresses real-world testing feedback and the WordPress.org Plugin Checker.
