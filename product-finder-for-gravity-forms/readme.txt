@@ -1,10 +1,10 @@
-=== Gravity Recommender ===
+=== Product Finder for Gravity Forms ===
 Contributors: collectifweb
 Tags: gravity forms, recommendation, product finder, scoring, quiz
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 8.0
-Stable tag: 3.1.2-beta
+Stable tag: 3.1.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,7 +12,7 @@ Recommend products at the end of a Gravity Forms questionnaire. Rules-based scor
 
 == Description ==
 
-Gravity Recommender turns a Gravity Forms questionnaire into a product picker. At the end of the form, the plugin scores each of your products against the visitor's answers and displays the best match (plus a couple of alternatives) as styled cards.
+Product Finder for Gravity Forms turns a Gravity Forms questionnaire into a product picker. At the end of the form, the plugin scores each of your products against the visitor's answers and displays the best match (plus a couple of alternatives) as styled cards.
 
 The scoring engine is fully local PHP — no OpenAI, no Claude, no remote service. You define rules in a clear "When → Then" admin UI: when the visitor's answers match certain conditions, boost / penalize / exclude / require specific products.
 
@@ -37,9 +37,13 @@ The scoring engine is fully local PHP — no OpenAI, no Claude, no remote servic
 * Insurance / financial product recommender
 * B2B product configurator
 
+= About the name =
+
+This plugin is a third-party companion for **Gravity Forms** (a separately sold commercial plugin by Rocketgenius, Inc.). It is not affiliated with, sponsored by, or endorsed by Rocketgenius. The "for Gravity Forms" suffix simply signals compatibility.
+
 == Installation ==
 
-1. Upload the plugin to `/wp-content/plugins/gravity-recommender/`, or install through the **Plugins** menu in WordPress.
+1. Upload the plugin to `/wp-content/plugins/product-finder-for-gravity-forms/`, or install through the **Plugins** menu in WordPress.
 2. Activate the plugin.
 3. Go to **Recommender → Setup** and follow the 5-step wizard.
 4. Add your products under **Recommender → All Products** (or use existing WooCommerce products).
@@ -57,7 +61,7 @@ Yes. Gravity Forms is the questionnaire engine. The plugin is a companion that h
 
 = Can I use my existing WooCommerce products? =
 
-Yes. In the setup wizard, choose "WooCommerce products" as the source. Tag your products with the standard WooCommerce product tags taxonomy, and reference those tags in your scoring rules.
+Yes. In the setup wizard, choose "WooCommerce products" as the source. Reference your existing products by ID in the scoring rules — the rule editor auto-completes from your catalog.
 
 = How do I customize the look of the recommendation cards? =
 
@@ -69,25 +73,29 @@ Yes. The recommendation result and explanation pass through filters (`gr_recomme
 
 = Where is the data stored? =
 
-Recommendation rules: `wp_options` (`gr_scoring_rules`, `gr_form_config`, `gr_product_source`). Products: the standard `wp_posts` / `wp_postmeta` tables (CPT `gr_product` or WooCommerce products).
+Recommendation rules: `wp_options` (`gr_scoring_rules`, `gr_form_config`, `gr_product_source`). Products: the standard `wp_posts` / `wp_postmeta` tables (CPT `gr_product` or WooCommerce products). No custom database tables are created.
 
 == Screenshots ==
 
 1. The 5-step setup wizard.
-2. Editing a recommended product with tags.
-3. Scoring rules editor — map any form field answer to a tag boost or exclusion.
+2. Editing a recommended product.
+3. Scoring rules editor — AND/OR conditions and four effects (Boost / Penalize / Exclude / Require) per rule.
 4. Sample recommendation cards on the form confirmation page.
 
 == Changelog ==
 
-= 3.1.2-beta =
-* Plugin Checker: replaced `(int) wp_unslash(...)` with `absint(wp_unslash(...))` on `$_POST['gr_form_id']` and `$_GET['step']`. The linter doesn't accept type casts as sanitization.
+= 3.1.2 =
+* Plugin renamed to "Product Finder for Gravity Forms" for WordPress.org directory compliance.
+* Plugin Checker: replaced `(int) wp_unslash(...)` with `absint(wp_unslash(...))` on `$_POST['gr_form_id']` and `$_GET['step']`. Static analyzers don't accept type casts as sanitization.
+* Filter renamed: `gr_gravityforms_affiliate_url` → `gr_gravityforms_url`.
+* Fixed self-referencing CSS custom properties in `:root` — default colors and fonts now render even when the theme doesn't override them.
+* LICENSE and license-string wording uniformized as "GPLv2 or later" across all files.
 
-= 3.1.1-beta =
+= 3.1.1 =
 * Hotfix: critical fatal error on Setup step 3 ("Products") — the CPT product source was calling a method removed in 3.1.0.
 * WordPress.org Plugin Checker compliance: removed `load_plugin_textdomain()` (auto-loaded since WP 4.6), added `languages/` folder, fixed `translators:` comment placement, switched to explicit per-field `wp_unslash() + sanitize_*()` chains across all admin pages.
 
-= 3.1.0-beta =
+= 3.1.0 =
 * Scoring engine rewritten: rules target products directly by ID (no more tag indirection).
 * New conditions builder with AND / OR logic and four effects per rule (Boost / Penalize / Exclude / Require).
 * New dedicated "Scoring Rules" admin page.
@@ -98,19 +106,19 @@ Recommendation rules: `wp_options` (`gr_scoring_rules`, `gr_form_config`, `gr_pr
 * Example form replaced with a generic SaaS Plan Picker.
 * `gr_ai_fallback_recommendation` filter for plugging an optional AI fallback.
 
-= 3.0.0-beta =
-* Complete rewrite for general-purpose use (was previously hosting-specific).
-* New tag-based scoring engine (replaces hardcoded hosting rules).
+= 3.0.0 =
+* First general-purpose release.
+* Tag-based scoring engine.
 * New `gr_product` Custom Post Type for managing recommended products.
 * WooCommerce product source support.
 * 5-step setup wizard with example form import.
 * CSS variables for theming.
-* Renamed plugin slug and shortcode (`[gravity_recommender]`).
-
-= 2.x =
-* Previous "Collectif HUB Product Recommender" releases (hosting-specific, single-site).
+* Shortcode `[gravity_recommender]`.
 
 == Upgrade Notice ==
 
-= 3.0.0-beta =
-Major rewrite. Not a drop-in upgrade from 2.x — the data model changed (static PHP registry → CPT, hardcoded hosting fields → free-form tags). Fresh installs only for now.
+= 3.1.2 =
+Plugin renamed and prepared for WordPress.org submission. Drop-in upgrade — no data migration required. Filter `gr_gravityforms_affiliate_url` renamed to `gr_gravityforms_url`; update your code if you used it.
+
+= 3.1.0 =
+Major engine rewrite: rules now target products directly by ID instead of through tags. Existing tag-based configurations from 3.0.x will need to be re-authored in the new Scoring Rules page.

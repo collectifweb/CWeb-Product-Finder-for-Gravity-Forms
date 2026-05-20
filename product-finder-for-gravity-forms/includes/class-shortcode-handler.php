@@ -149,12 +149,12 @@ class GR_Shortcode_Handler {
             ? 'gr-product-card gr-product-card--featured'
             : 'gr-product-card';
 
-        $cta_label = $product['cta_label'] !== '' ? $product['cta_label'] : __('Add to cart', 'gravity-recommender');
+        $cta_label = $product['cta_label'] !== '' ? $product['cta_label'] : __('Add to cart', 'product-finder-for-gravity-forms');
         $cta_url = $product['payment_url'] !== '' ? $product['payment_url'] : ($product['page_url'] !== '' ? $product['page_url'] : '#');
         ?>
         <div class="<?php echo esc_attr($card_class); ?>">
             <?php if ($is_featured): ?>
-                <div class="gr-badge"><?php esc_html_e('Our recommendation', 'gravity-recommender'); ?></div>
+                <div class="gr-badge"><?php esc_html_e('Our recommendation', 'product-finder-for-gravity-forms'); ?></div>
             <?php endif; ?>
 
             <div class="gr-product-content">
@@ -186,7 +186,7 @@ class GR_Shortcode_Handler {
 
                 <?php if ($product['page_url'] !== '' && $product['page_url'] !== $cta_url): ?>
                     <a href="<?php echo esc_url($product['page_url']); ?>" class="gr-product-details-link" target="_blank" rel="noopener">
-                        <?php esc_html_e('See details', 'gravity-recommender'); ?>
+                        <?php esc_html_e('See details', 'product-finder-for-gravity-forms'); ?>
                     </a>
                 <?php endif; ?>
             </div>
@@ -200,11 +200,11 @@ class GR_Shortcode_Handler {
         ob_start();
         ?>
         <div class="gr-error-message">
-            <h3><?php esc_html_e('We could not generate a recommendation', 'gravity-recommender'); ?></h3>
-            <p><?php esc_html_e('Our team will gladly help you choose the right product.', 'gravity-recommender'); ?></p>
+            <h3><?php esc_html_e('We could not generate a recommendation', 'product-finder-for-gravity-forms'); ?></h3>
+            <p><?php esc_html_e('Our team will gladly help you choose the right product.', 'product-finder-for-gravity-forms'); ?></p>
             <?php if ($fallback_url !== ''): ?>
                 <a href="<?php echo esc_url($fallback_url); ?>" class="gr-contact-button">
-                    <?php esc_html_e('Contact us', 'gravity-recommender'); ?>
+                    <?php esc_html_e('Contact us', 'product-finder-for-gravity-forms'); ?>
                 </a>
             <?php endif; ?>
         </div>

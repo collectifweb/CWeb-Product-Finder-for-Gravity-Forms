@@ -1,7 +1,7 @@
 {
   "0": {
-    "title": "SaaS Plan Picker — Gravity Recommender Demo",
-    "description": "Sample form shipped with Gravity Recommender. Answer 3 quick questions and we'll suggest the right plan.",
+    "title": "SaaS Plan Picker — Product Finder Demo",
+    "description": "Sample form shipped with Product Finder for Gravity Forms. Answer 3 quick questions and we'll suggest the right plan.",
     "labelPlacement": "top_label",
     "descriptionPlacement": "below",
     "button": { "type": "text", "text": "Show my recommendation", "imageUrl": "" },

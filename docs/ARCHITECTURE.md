@@ -1,4 +1,4 @@
-# Gravity Recommender — Architecture
+# Product Finder for Gravity Forms — Architecture
 
 ## Overview
 
@@ -28,8 +28,8 @@ GR_Shortcode_Handler::render_shortcode()
 ## File layout
 
 ```
-gravity-recommender/
-├── gravity-recommender.php             # Plugin header + bootstrap
+product-finder-for-gravity-forms/
+├── product-finder-for-gravity-forms.php # Plugin header + bootstrap
 ├── readme.txt                          # wordpress.org-format readme
 ├── includes/
 │   ├── class-product-cpt.php           # CPT `gr_product` + meta box

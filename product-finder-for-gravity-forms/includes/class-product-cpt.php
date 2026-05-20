@@ -31,15 +31,15 @@ class GR_Product_CPT {
     public function register_post_type(): void {
         register_post_type(self::POST_TYPE, [
             'labels' => [
-                'name'          => __('Recommended Products', 'gravity-recommender'),
-                'singular_name' => __('Recommended Product', 'gravity-recommender'),
-                'add_new'       => __('Add new', 'gravity-recommender'),
-                'add_new_item'  => __('Add new product', 'gravity-recommender'),
-                'edit_item'     => __('Edit product', 'gravity-recommender'),
-                'new_item'      => __('New product', 'gravity-recommender'),
-                'view_item'     => __('View product', 'gravity-recommender'),
-                'search_items'  => __('Search products', 'gravity-recommender'),
-                'menu_name'     => __('Recommender', 'gravity-recommender'),
+                'name'          => __('Recommended Products', 'product-finder-for-gravity-forms'),
+                'singular_name' => __('Recommended Product', 'product-finder-for-gravity-forms'),
+                'add_new'       => __('Add new', 'product-finder-for-gravity-forms'),
+                'add_new_item'  => __('Add new product', 'product-finder-for-gravity-forms'),
+                'edit_item'     => __('Edit product', 'product-finder-for-gravity-forms'),
+                'new_item'      => __('New product', 'product-finder-for-gravity-forms'),
+                'view_item'     => __('View product', 'product-finder-for-gravity-forms'),
+                'search_items'  => __('Search products', 'product-finder-for-gravity-forms'),
+                'menu_name'     => __('Recommender', 'product-finder-for-gravity-forms'),
             ],
             'public'          => false,
             'show_ui'         => true,
@@ -58,7 +58,7 @@ class GR_Product_CPT {
     public function register_meta_boxes(): void {
         add_meta_box(
             'gr_product_attributes',
-            __('Product attributes', 'gravity-recommender'),
+            __('Product attributes', 'product-finder-for-gravity-forms'),
             [$this, 'render_meta_box'],
             self::POST_TYPE,
             'normal',
@@ -81,38 +81,38 @@ class GR_Product_CPT {
         </style>
         <table class="gr-meta-table">
             <tr>
-                <th><label for="gr_price_label"><?php esc_html_e('Price label', 'gravity-recommender'); ?></label></th>
+                <th><label for="gr_price_label"><?php esc_html_e('Price label', 'product-finder-for-gravity-forms'); ?></label></th>
                 <td>
                     <input type="text" name="gr_price_label" id="gr_price_label" value="<?php echo esc_attr($values['price_label']); ?>" placeholder="$29 / month" />
-                    <span class="gr-meta-hint"><?php esc_html_e('Free-form text shown on the product card. Example: "$29 / month" or "From $99".', 'gravity-recommender'); ?></span>
+                    <span class="gr-meta-hint"><?php esc_html_e('Free-form text shown on the product card. Example: "$29 / month" or "From $99".', 'product-finder-for-gravity-forms'); ?></span>
                 </td>
             </tr>
             <tr>
-                <th><label for="gr_description"><?php esc_html_e('Short description', 'gravity-recommender'); ?></label></th>
+                <th><label for="gr_description"><?php esc_html_e('Short description', 'product-finder-for-gravity-forms'); ?></label></th>
                 <td>
-                    <textarea name="gr_description" id="gr_description" rows="2" placeholder="<?php esc_attr_e('A one-line pitch shown below the features.', 'gravity-recommender'); ?>"><?php echo esc_textarea($values['description']); ?></textarea>
+                    <textarea name="gr_description" id="gr_description" rows="2" placeholder="<?php esc_attr_e('A one-line pitch shown below the features.', 'product-finder-for-gravity-forms'); ?>"><?php echo esc_textarea($values['description']); ?></textarea>
                 </td>
             </tr>
             <tr>
-                <th><label for="gr_features"><?php esc_html_e('Features (one per line)', 'gravity-recommender'); ?></label></th>
+                <th><label for="gr_features"><?php esc_html_e('Features (one per line)', 'product-finder-for-gravity-forms'); ?></label></th>
                 <td>
                     <textarea name="gr_features" id="gr_features" rows="5" placeholder="Up to 3 users&#10;5 GB storage&#10;Priority email support"><?php echo esc_textarea($values['features']); ?></textarea>
                 </td>
             </tr>
             <tr>
-                <th><label for="gr_page_url"><?php esc_html_e('Product page URL', 'gravity-recommender'); ?></label></th>
+                <th><label for="gr_page_url"><?php esc_html_e('Product page URL', 'product-finder-for-gravity-forms'); ?></label></th>
                 <td><input type="url" name="gr_page_url" id="gr_page_url" value="<?php echo esc_attr($values['page_url']); ?>" placeholder="https://example.com/plan/starter" /></td>
             </tr>
             <tr>
-                <th><label for="gr_payment_url"><?php esc_html_e('Payment / cart URL', 'gravity-recommender'); ?></label></th>
+                <th><label for="gr_payment_url"><?php esc_html_e('Payment / cart URL', 'product-finder-for-gravity-forms'); ?></label></th>
                 <td>
                     <input type="url" name="gr_payment_url" id="gr_payment_url" value="<?php echo esc_attr($values['payment_url']); ?>" placeholder="https://example.com/checkout?plan=starter" />
-                    <span class="gr-meta-hint"><?php esc_html_e('Used by the CTA button. Falls back to the page URL if empty.', 'gravity-recommender'); ?></span>
+                    <span class="gr-meta-hint"><?php esc_html_e('Used by the CTA button. Falls back to the page URL if empty.', 'product-finder-for-gravity-forms'); ?></span>
                 </td>
             </tr>
             <tr>
-                <th><label for="gr_cta_label"><?php esc_html_e('CTA button label', 'gravity-recommender'); ?></label></th>
-                <td><input type="text" name="gr_cta_label" id="gr_cta_label" value="<?php echo esc_attr($values['cta_label']); ?>" placeholder="<?php esc_attr_e('Add to cart', 'gravity-recommender'); ?>" /></td>
+                <th><label for="gr_cta_label"><?php esc_html_e('CTA button label', 'product-finder-for-gravity-forms'); ?></label></th>
+                <td><input type="text" name="gr_cta_label" id="gr_cta_label" value="<?php echo esc_attr($values['cta_label']); ?>" placeholder="<?php esc_attr_e('Add to cart', 'product-finder-for-gravity-forms'); ?>" /></td>
             </tr>
         </table>
         <?php

@@ -1,5 +1,5 @@
 /**
- * Gravity Recommender — Product card styles
+ * Product Finder for Gravity Forms — Product card styles
  *
  * Toutes les classes sont préfixées `.gr-*` pour éviter les conflits.
  *
@@ -12,12 +12,14 @@
  * adapter les couleurs et la typographie sans toucher au plugin.
  */
 
+/* Default theme tokens — override any of these from your theme stylesheet
+   to rebrand the recommendation cards without touching the plugin. */
 :root {
-    --gr-primary:        var(--gr-primary);
-    --gr-secondary:      var(--gr-secondary);
-    --gr-accent:         var(--gr-accent);
-    --gr-font-heading:   var(--gr-font-heading);
-    --gr-font-body:      var(--gr-font-body);
+    --gr-primary:        #2c3e50;
+    --gr-secondary:      #5a6c7d;
+    --gr-accent:         #3498db;
+    --gr-font-heading:   inherit;
+    --gr-font-body:      inherit;
 }
 
 /* ============================================

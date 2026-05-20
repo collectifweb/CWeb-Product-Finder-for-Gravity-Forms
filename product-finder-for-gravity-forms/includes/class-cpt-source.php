@@ -55,7 +55,7 @@ class GR_CPT_Source implements GR_Product_Source {
             'description' => $meta['description'],
             'page_url'    => $meta['page_url'],
             'payment_url' => $payment_url,
-            'cta_label'   => $meta['cta_label'] !== '' ? $meta['cta_label'] : __('Add to cart', 'gravity-recommender'),
+            'cta_label'   => $meta['cta_label'] !== '' ? $meta['cta_label'] : __('Add to cart', 'product-finder-for-gravity-forms'),
             'image_url'   => $thumbnail ?: '',
         ];
     }

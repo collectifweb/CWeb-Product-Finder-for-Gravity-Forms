@@ -1,14 +1,14 @@
 <?php
 /**
- * Plugin Name: Gravity Recommender
- * Plugin URI: https://github.com/collectifweb/Gravity-Recommender_wp-plugin
+ * Plugin Name: Product Finder for Gravity Forms
+ * Plugin URI: https://github.com/collectifweb/Product-Finder-for-Gravity-Forms
  * Description: Recommend products at the end of a Gravity Forms questionnaire. Rules-based scoring engine targeting products directly — no external API. Works with the built-in product CPT or WooCommerce.
- * Version: 3.1.2-beta
+ * Version: 3.1.2
  * Author: Collectif WEB
  * Author URI: https://collectif-web.ca
- * License: GPL v2 or later
+ * License: GPLv2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain: gravity-recommender
+ * Text Domain: product-finder-for-gravity-forms
  * Domain Path: /languages
  * Requires PHP: 8.0
  * Requires at least: 6.0
@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('GR_VERSION', '3.1.2-beta');
+define('GR_VERSION', '3.1.2');
 define('GR_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('GR_PLUGIN_URL', plugin_dir_url(__FILE__));
 

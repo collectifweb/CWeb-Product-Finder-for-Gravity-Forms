@@ -1,20 +1,22 @@
-# Gravity Recommender
+# Product Finder for Gravity Forms
 
-> A tag-based product recommender that plugs into the end of any Gravity Forms questionnaire. No external API — all scoring happens locally in PHP.
+> A rules-based product recommender that plugs into the end of any Gravity Forms questionnaire. No external API — all scoring happens locally in PHP.
 
 [![License: GPL v2+](https://img.shields.io/badge/License-GPLv2-blue.svg)](LICENSE)
 ![PHP >= 8.0](https://img.shields.io/badge/PHP-%3E%3D%208.0-777BB4)
 ![WordPress >= 6.0](https://img.shields.io/badge/WordPress-%3E%3D%206.0-21759B)
 
-Gravity Recommender takes a visitor's answers from a Gravity Forms form, scores each of your products against those answers using a tag-based rules system you configure in WordPress admin, and renders the best match (plus a couple of alternatives) as styled cards on the form confirmation page.
+**Product Finder for Gravity Forms** takes a visitor's answers from a Gravity Forms form, scores each of your products against those answers using a condition/effect rules system you configure in WordPress admin, and renders the best match (plus a couple of alternatives) as styled cards on the form confirmation page.
 
 It works with two product sources: a lightweight built-in Custom Post Type, or your existing WooCommerce products.
+
+> This plugin is a third-party companion for **Gravity Forms** (a commercial plugin by Rocketgenius, Inc.). It is not affiliated with, sponsored by, or endorsed by Rocketgenius.
 
 ## Why?
 
 Most "recommendation" plugins on WordPress call out to OpenAI / Claude / a remote API. That brings real costs (per-recommendation billing), latency, vendor lock-in, and sends visitor data offsite.
 
-But most product-recommendation logic is genuinely simple — "if the visitor says X, prefer products that do Y" — and that translates beautifully to a small set of tag-based rules. This plugin codifies that:
+But most product-recommendation logic is genuinely simple — "if the visitor says X, prefer products that do Y" — and that translates beautifully to a small set of rules. This plugin codifies that:
 
 - ⚡ **Instant** — no network round-trip
 - 💸 **Free** — zero cost per recommendation
@@ -28,8 +30,8 @@ But most product-recommendation logic is genuinely simple — "if the visitor sa
 Visitor submits a Gravity Form
     │
     ▼
-gform_entry_post_save  →  Tag-based scoring engine
-    │                     (sums boosts/exclusions per product)
+gform_entry_post_save  →  Rules-based scoring engine
+    │                     (sums boosts/penalties per product, applies excludes/requires)
     ▼
 JSON result saved in a hidden GF field
     │
@@ -44,8 +46,8 @@ See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the full design.
 
 ## Installation
 
-1. Drop the [`gravity-recommender/`](gravity-recommender/) folder into `wp-content/plugins/`.
-2. Activate **Gravity Recommender** in WordPress.
+1. Drop the [`product-finder-for-gravity-forms/`](product-finder-for-gravity-forms/) folder into `wp-content/plugins/`.
+2. Activate **Product Finder for Gravity Forms** in WordPress.
 3. Go to **Recommender → Setup** and follow the wizard:
    1. Welcome / dependency check (Gravity Forms required)
    2. Pick the product source (CPT or WooCommerce)
@@ -85,13 +87,14 @@ add_filter('gr_field_id', fn() => '50');
 Replace the default "Based on your answers, we recommend X" with your own copy:
 
 ```php
-add_filter('gr_recommendation_explanation', function ($default, $product, $matched_tags) {
-    if (in_array('ecommerce', $matched_tags, true)) {
-        return 'Because you mentioned e-commerce, we suggest ' . $product['name'] . '.';
-    }
-    return $default;
+add_filter('gr_recommendation_explanation', function ($default, $product, $context) {
+    return 'Because of your answers, we suggest ' . $product['name'] . '.';
 }, 10, 3);
 ```
+
+### AI fallback (optional)
+
+When no rule matches, you can plug your own AI service via the `gr_ai_fallback_recommendation` filter. No default implementation is shipped — the filter is empty unless you provide a callback.
 
 ### Theming
 
@@ -117,7 +120,7 @@ Optional: WooCommerce (for the WooCommerce product source).
 
 ## Credits
 
-Built by [**Alexandre Alves**](mailto:alexandre@collectifweb.ca) at [**Collectif WEB**](https://collectif-web.ca). Originally created for [Collectif HUB](https://collectif-hub.ca); rewritten for general use in v3.0.
+Built by [**Alexandre Alves**](mailto:alexandre@collectifweb.ca) at [**Collectif WEB**](https://collectif-web.ca).
 
 If this plugin saves you a recurring API bill, a GitHub star is appreciated ⭐
 

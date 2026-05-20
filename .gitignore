@@ -17,3 +17,4 @@ vendor/
 
 # WP.org Plugin Checker reports (diagnostic exports)
 gravity-recommender-*.json
+product-finder-for-gravity-forms-*.json

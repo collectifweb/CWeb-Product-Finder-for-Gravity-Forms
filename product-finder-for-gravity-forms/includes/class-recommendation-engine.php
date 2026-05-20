@@ -66,7 +66,7 @@ class GR_Recommendation_Engine {
         $products = $this->source->get_all_products();
 
         if (empty($products)) {
-            return $this->build_empty_result(__('No products are configured yet.', 'gravity-recommender'));
+            return $this->build_empty_result(__('No products are configured yet.', 'product-finder-for-gravity-forms'));
         }
 
         $scores = [];
@@ -122,7 +122,7 @@ class GR_Recommendation_Engine {
             if (is_array($ai_result) && isset($ai_result['recommended_product_id'])) {
                 return $ai_result;
             }
-            return $this->build_empty_result(__('No product matched your answers. Please contact us for help.', 'gravity-recommender'));
+            return $this->build_empty_result(__('No product matched your answers. Please contact us for help.', 'product-finder-for-gravity-forms'));
         }
 
         usort($eligible_ids, function ($a, $b) use ($scores) {
@@ -244,7 +244,7 @@ class GR_Recommendation_Engine {
 
         return sprintf(
             /* translators: %s is a product name */
-            __('Based on your answers, we recommend the %s.', 'gravity-recommender'),
+            __('Based on your answers, we recommend the %s.', 'product-finder-for-gravity-forms'),
             $name
         );
     }

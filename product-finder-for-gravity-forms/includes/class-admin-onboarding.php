@@ -1,6 +1,6 @@
 <?php
 /**
- * Onboarding admin pour Gravity Recommender.
+ * Onboarding admin pour Product Finder for Gravity Forms.
  *
  * 4 étapes effectives + un récap (les règles de scoring ont leur propre page) :
  *
@@ -29,15 +29,15 @@ class GR_Admin_Onboarding {
         add_action('admin_init', [$this, 'handle_form_submissions']);
         add_action('admin_notices', [$this, 'maybe_show_setup_notice']);
 
-        $main = GR_PLUGIN_DIR . 'gravity-recommender.php';
+        $main = GR_PLUGIN_DIR . 'product-finder-for-gravity-forms.php';
         add_filter('plugin_action_links_' . plugin_basename($main), [$this, 'add_settings_link']);
     }
 
     public function register_menu(): void {
         add_submenu_page(
             'edit.php?post_type=' . GR_Product_CPT::POST_TYPE,
-            __('Recommender Setup', 'gravity-recommender'),
-            __('Setup', 'gravity-recommender'),
+            __('Recommender Setup', 'product-finder-for-gravity-forms'),
+            __('Setup', 'product-finder-for-gravity-forms'),
             'manage_options',
             self::PAGE_SLUG,
             [$this, 'render_page']
@@ -46,7 +46,7 @@ class GR_Admin_Onboarding {
 
     public function add_settings_link(array $links): array {
         $url = admin_url('edit.php?post_type=' . GR_Product_CPT::POST_TYPE . '&page=' . self::PAGE_SLUG);
-        $links[] = '<a href="' . esc_url($url) . '">' . esc_html__('Setup', 'gravity-recommender') . '</a>';
+        $links[] = '<a href="' . esc_url($url) . '">' . esc_html__('Setup', 'product-finder-for-gravity-forms') . '</a>';
         return $links;
     }
 
@@ -64,10 +64,10 @@ class GR_Admin_Onboarding {
         ?>
         <div class="notice notice-info">
             <p>
-                <strong>Gravity Recommender</strong> —
-                <?php esc_html_e('Finish the setup to start recommending products.', 'gravity-recommender'); ?>
+                <strong>Product Finder for Gravity Forms</strong> —
+                <?php esc_html_e('Finish the setup to start recommending products.', 'product-finder-for-gravity-forms'); ?>
                 <a href="<?php echo esc_url($url); ?>" class="button button-primary" style="margin-left: 10px;">
-                    <?php esc_html_e('Open setup wizard', 'gravity-recommender'); ?>
+                    <?php esc_html_e('Open setup wizard', 'product-finder-for-gravity-forms'); ?>
                 </a>
             </p>
         </div>
@@ -143,15 +143,15 @@ class GR_Admin_Onboarding {
 
     private function render_header(int $current_step): void {
         $steps = [
-            1 => __('Welcome', 'gravity-recommender'),
-            2 => __('Source', 'gravity-recommender'),
-            3 => __('Products', 'gravity-recommender'),
-            4 => __('Form', 'gravity-recommender'),
-            5 => __('Done', 'gravity-recommender'),
+            1 => __('Welcome', 'product-finder-for-gravity-forms'),
+            2 => __('Source', 'product-finder-for-gravity-forms'),
+            3 => __('Products', 'product-finder-for-gravity-forms'),
+            4 => __('Form', 'product-finder-for-gravity-forms'),
+            5 => __('Done', 'product-finder-for-gravity-forms'),
         ];
         ?>
         <div class="wrap gr-onboarding">
-            <h1><?php esc_html_e('Gravity Recommender — Setup', 'gravity-recommender'); ?></h1>
+            <h1><?php esc_html_e('Product Finder for Gravity Forms — Setup', 'product-finder-for-gravity-forms'); ?></h1>
 
             <ol class="gr-steps">
                 <?php foreach ($steps as $n => $label): ?>
@@ -199,8 +199,8 @@ class GR_Admin_Onboarding {
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         $msg = sanitize_text_field(wp_unslash($_GET['msg']));
         $messages = [
-            'form_imported'      => ['success', __('Example form imported. Select it below.', 'gravity-recommender')],
-            'form_import_failed' => ['error',   __('Could not import the example form. Make sure Gravity Forms is active.', 'gravity-recommender')],
+            'form_imported'      => ['success', __('Example form imported. Select it below.', 'product-finder-for-gravity-forms')],
+            'form_import_failed' => ['error',   __('Could not import the example form. Make sure Gravity Forms is active.', 'product-finder-for-gravity-forms')],
         ];
         if (!isset($messages[$msg])) {
             return;
@@ -212,46 +212,46 @@ class GR_Admin_Onboarding {
     private function render_step_welcome(): void {
         $gf_active = class_exists('GFForms');
         $woo_active = class_exists('WooCommerce');
-        $gf_url = apply_filters('gr_gravityforms_affiliate_url', self::GF_DEFAULT_URL);
+        $gf_url = apply_filters('gr_gravityforms_url', self::GF_DEFAULT_URL);
         ?>
-        <h2><?php esc_html_e('Welcome', 'gravity-recommender'); ?></h2>
-        <p><?php esc_html_e('Gravity Recommender plugs into a Gravity Forms questionnaire and recommends products to the visitor based on their answers. The scoring engine runs locally — no external API.', 'gravity-recommender'); ?></p>
+        <h2><?php esc_html_e('Welcome', 'product-finder-for-gravity-forms'); ?></h2>
+        <p><?php esc_html_e('Product Finder for Gravity Forms plugs into a Gravity Forms questionnaire and recommends products to the visitor based on their answers. The scoring engine runs locally — no external API.', 'product-finder-for-gravity-forms'); ?></p>
 
-        <h3><?php esc_html_e('System check', 'gravity-recommender'); ?></h3>
+        <h3><?php esc_html_e('System check', 'product-finder-for-gravity-forms'); ?></h3>
         <ul style="line-height: 2;">
             <li>
                 <?php if ($gf_active): ?>
-                    ✅ <?php esc_html_e('Gravity Forms is active.', 'gravity-recommender'); ?>
+                    ✅ <?php esc_html_e('Gravity Forms is active.', 'product-finder-for-gravity-forms'); ?>
                 <?php else: ?>
-                    ❌ <strong><?php esc_html_e('Gravity Forms is not installed.', 'gravity-recommender'); ?></strong>
+                    ❌ <strong><?php esc_html_e('Gravity Forms is not installed.', 'product-finder-for-gravity-forms'); ?></strong>
                 <?php endif; ?>
             </li>
             <li>
                 <?php if ($woo_active): ?>
-                    ✅ <?php esc_html_e('WooCommerce detected (optional). You can use Woo products as recommendations.', 'gravity-recommender'); ?>
+                    ✅ <?php esc_html_e('WooCommerce detected (optional). You can use Woo products as recommendations.', 'product-finder-for-gravity-forms'); ?>
                 <?php else: ?>
-                    ℹ️ <?php esc_html_e('WooCommerce is not installed (optional). The plugin ships with a built-in product type.', 'gravity-recommender'); ?>
+                    ℹ️ <?php esc_html_e('WooCommerce is not installed (optional). The plugin ships with a built-in product type.', 'product-finder-for-gravity-forms'); ?>
                 <?php endif; ?>
             </li>
         </ul>
 
         <?php if (!$gf_active): ?>
             <div class="gr-callout gr-callout--warning">
-                <h3 style="margin-top:0;"><?php esc_html_e('You need Gravity Forms first', 'gravity-recommender'); ?></h3>
-                <p><?php esc_html_e('Gravity Forms is a commercial plugin (the engine that runs your questionnaire). Gravity Recommender is the companion that handles the recommendation logic at the end of the form.', 'gravity-recommender'); ?></p>
+                <h3 style="margin-top:0;"><?php esc_html_e('You need Gravity Forms first', 'product-finder-for-gravity-forms'); ?></h3>
+                <p><?php esc_html_e('Gravity Forms is a commercial plugin (the engine that runs your questionnaire). Product Finder for Gravity Forms is the companion that handles the recommendation logic at the end of the form.', 'product-finder-for-gravity-forms'); ?></p>
                 <p>
                     <a href="<?php echo esc_url($gf_url); ?>" class="button button-primary" target="_blank" rel="noopener">
-                        <?php esc_html_e('Get Gravity Forms →', 'gravity-recommender'); ?>
+                        <?php esc_html_e('Get Gravity Forms →', 'product-finder-for-gravity-forms'); ?>
                     </a>
                 </p>
                 <p style="margin-bottom: 0; font-size: 13px; color: #666;">
-                    <?php esc_html_e('Already have it? Install and activate it, then refresh this page.', 'gravity-recommender'); ?>
+                    <?php esc_html_e('Already have it? Install and activate it, then refresh this page.', 'product-finder-for-gravity-forms'); ?>
                 </p>
             </div>
         <?php else: ?>
             <div class="gr-actions">
                 <a href="<?php echo esc_url(admin_url('edit.php?post_type=' . GR_Product_CPT::POST_TYPE . '&page=' . self::PAGE_SLUG . '&step=2')); ?>" class="button button-primary">
-                    <?php esc_html_e('Get started →', 'gravity-recommender'); ?>
+                    <?php esc_html_e('Get started →', 'product-finder-for-gravity-forms'); ?>
                 </a>
             </div>
         <?php endif; ?>
@@ -262,8 +262,8 @@ class GR_Admin_Onboarding {
         $current = get_option(self::OPTION_SOURCE, 'cpt');
         $woo_active = class_exists('WooCommerce');
         ?>
-        <h2><?php esc_html_e('Step 2 — Where will your products come from?', 'gravity-recommender'); ?></h2>
-        <p><?php esc_html_e('Choose the catalog the recommender should pick from.', 'gravity-recommender'); ?></p>
+        <h2><?php esc_html_e('Step 2 — Where will your products come from?', 'product-finder-for-gravity-forms'); ?></h2>
+        <p><?php esc_html_e('Choose the catalog the recommender should pick from.', 'product-finder-for-gravity-forms'); ?></p>
 
         <form method="post" action="">
             <?php wp_nonce_field('gr_onboarding', 'gr_nonce'); ?>
@@ -271,21 +271,21 @@ class GR_Admin_Onboarding {
 
             <label style="display: block; padding: 14px; border: 2px solid <?php echo $current === 'cpt' ? '#2271b1' : '#ddd'; ?>; margin-bottom: 10px; cursor: pointer;">
                 <input type="radio" name="gr_source" value="cpt" <?php checked($current, 'cpt'); ?> />
-                <strong><?php esc_html_e('Built-in Recommended Products (default)', 'gravity-recommender'); ?></strong>
-                <p style="margin: 6px 0 0 24px; color: #666;"><?php esc_html_e('A dedicated WordPress menu for managing the products. Lightweight, no e-commerce setup required.', 'gravity-recommender'); ?></p>
+                <strong><?php esc_html_e('Built-in Recommended Products (default)', 'product-finder-for-gravity-forms'); ?></strong>
+                <p style="margin: 6px 0 0 24px; color: #666;"><?php esc_html_e('A dedicated WordPress menu for managing the products. Lightweight, no e-commerce setup required.', 'product-finder-for-gravity-forms'); ?></p>
             </label>
 
             <label style="display: block; padding: 14px; border: 2px solid <?php echo $current === 'woocommerce' ? '#2271b1' : '#ddd'; ?>; <?php echo !$woo_active ? 'opacity: 0.5;' : 'cursor: pointer;'; ?>">
                 <input type="radio" name="gr_source" value="woocommerce" <?php checked($current, 'woocommerce'); ?> <?php disabled(!$woo_active); ?> />
-                <strong><?php esc_html_e('WooCommerce products', 'gravity-recommender'); ?></strong>
+                <strong><?php esc_html_e('WooCommerce products', 'product-finder-for-gravity-forms'); ?></strong>
                 <?php if (!$woo_active): ?>
-                    <em>— <?php esc_html_e('WooCommerce is not active.', 'gravity-recommender'); ?></em>
+                    <em>— <?php esc_html_e('WooCommerce is not active.', 'product-finder-for-gravity-forms'); ?></em>
                 <?php endif; ?>
-                <p style="margin: 6px 0 0 24px; color: #666;"><?php esc_html_e('Use your existing Woo catalog. Products are referenced by their post ID in scoring rules.', 'gravity-recommender'); ?></p>
+                <p style="margin: 6px 0 0 24px; color: #666;"><?php esc_html_e('Use your existing Woo catalog. Products are referenced by their post ID in scoring rules.', 'product-finder-for-gravity-forms'); ?></p>
             </label>
 
             <div class="gr-actions">
-                <button type="submit" class="button button-primary"><?php esc_html_e('Continue →', 'gravity-recommender'); ?></button>
+                <button type="submit" class="button button-primary"><?php esc_html_e('Continue →', 'product-finder-for-gravity-forms'); ?></button>
             </div>
         </form>
         <?php
@@ -297,25 +297,25 @@ class GR_Admin_Onboarding {
         $count = count($products);
         $is_cpt = get_option(self::OPTION_SOURCE, 'cpt') === 'cpt';
         ?>
-        <h2><?php esc_html_e('Step 3 — Add a few products', 'gravity-recommender'); ?></h2>
-        <p><?php esc_html_e('Create the products you want to recommend. You\'ll wire your form answers to them in the Scoring Rules page after setup.', 'gravity-recommender'); ?></p>
+        <h2><?php esc_html_e('Step 3 — Add a few products', 'product-finder-for-gravity-forms'); ?></h2>
+        <p><?php esc_html_e('Create the products you want to recommend. You\'ll wire your form answers to them in the Scoring Rules page after setup.', 'product-finder-for-gravity-forms'); ?></p>
 
         <?php if ($count === 0): ?>
             <div class="gr-callout">
-                <p><strong><?php esc_html_e('No products yet.', 'gravity-recommender'); ?></strong>
-                   <?php esc_html_e('Add at least one before continuing.', 'gravity-recommender'); ?></p>
+                <p><strong><?php esc_html_e('No products yet.', 'product-finder-for-gravity-forms'); ?></strong>
+                   <?php esc_html_e('Add at least one before continuing.', 'product-finder-for-gravity-forms'); ?></p>
                 <p>
                     <?php if ($is_cpt): ?>
                         <a href="<?php echo esc_url(admin_url('post-new.php?post_type=' . GR_Product_CPT::POST_TYPE)); ?>" class="button button-primary" target="_blank">
-                            <?php esc_html_e('Add a product', 'gravity-recommender'); ?>
+                            <?php esc_html_e('Add a product', 'product-finder-for-gravity-forms'); ?>
                         </a>
                     <?php else: ?>
                         <a href="<?php echo esc_url(admin_url('post-new.php?post_type=product')); ?>" class="button button-primary" target="_blank">
-                            <?php esc_html_e('Add a WooCommerce product', 'gravity-recommender'); ?>
+                            <?php esc_html_e('Add a WooCommerce product', 'product-finder-for-gravity-forms'); ?>
                         </a>
                     <?php endif; ?>
                     <a href="<?php echo esc_url(admin_url('edit.php?post_type=' . GR_Product_CPT::POST_TYPE . '&page=' . self::PAGE_SLUG . '&step=3')); ?>" class="button">
-                        <?php esc_html_e('I added one, refresh', 'gravity-recommender'); ?>
+                        <?php esc_html_e('I added one, refresh', 'product-finder-for-gravity-forms'); ?>
                     </a>
                 </p>
             </div>
@@ -324,7 +324,7 @@ class GR_Admin_Onboarding {
                 <p><strong><?php
                     printf(
                         /* translators: %d is the number of products */
-                        esc_html(_n('%d product ready.', '%d products ready.', $count, 'gravity-recommender')),
+                        esc_html(_n('%d product ready.', '%d products ready.', $count, 'product-finder-for-gravity-forms')),
                         (int) $count
                     );
                 ?></strong></p>
@@ -342,7 +342,7 @@ class GR_Admin_Onboarding {
         <div class="gr-actions">
             <?php if ($count > 0): ?>
                 <a href="<?php echo esc_url(admin_url('edit.php?post_type=' . GR_Product_CPT::POST_TYPE . '&page=' . self::PAGE_SLUG . '&step=4')); ?>" class="button button-primary">
-                    <?php esc_html_e('Continue →', 'gravity-recommender'); ?>
+                    <?php esc_html_e('Continue →', 'product-finder-for-gravity-forms'); ?>
                 </a>
             <?php endif; ?>
         </div>
@@ -355,34 +355,34 @@ class GR_Admin_Onboarding {
         $field_id = (string) ($config['field_id'] ?? '');
 
         if (!class_exists('GFAPI')) {
-            echo '<h2>' . esc_html__('Step 4 — Pick your Gravity Form', 'gravity-recommender') . '</h2>';
-            echo '<p>' . esc_html__('Gravity Forms is not active.', 'gravity-recommender') . '</p>';
+            echo '<h2>' . esc_html__('Step 4 — Pick your Gravity Form', 'product-finder-for-gravity-forms') . '</h2>';
+            echo '<p>' . esc_html__('Gravity Forms is not active.', 'product-finder-for-gravity-forms') . '</p>';
             return;
         }
 
         $forms = GFAPI::get_forms();
         ?>
-        <h2><?php esc_html_e('Step 4 — Pick your Gravity Form', 'gravity-recommender'); ?></h2>
-        <p><?php esc_html_e('Choose the form the recommender will listen to. We\'ll auto-detect a hidden field where the JSON result is stored.', 'gravity-recommender'); ?></p>
+        <h2><?php esc_html_e('Step 4 — Pick your Gravity Form', 'product-finder-for-gravity-forms'); ?></h2>
+        <p><?php esc_html_e('Choose the form the recommender will listen to. We\'ll auto-detect a hidden field where the JSON result is stored.', 'product-finder-for-gravity-forms'); ?></p>
 
         <?php if (empty($forms)): ?>
             <div class="gr-callout gr-callout--warning">
-                <p><strong><?php esc_html_e('No Gravity Forms found.', 'gravity-recommender'); ?></strong>
-                   <?php esc_html_e('Create your form first, or import our example one.', 'gravity-recommender'); ?></p>
+                <p><strong><?php esc_html_e('No Gravity Forms found.', 'product-finder-for-gravity-forms'); ?></strong>
+                   <?php esc_html_e('Create your form first, or import our example one.', 'product-finder-for-gravity-forms'); ?></p>
                 <form method="post" action="">
                     <?php wp_nonce_field('gr_onboarding', 'gr_nonce'); ?>
                     <input type="hidden" name="gr_action" value="import_example_form" />
-                    <p><button type="submit" class="button button-primary"><?php esc_html_e('Import the example form', 'gravity-recommender'); ?></button></p>
+                    <p><button type="submit" class="button button-primary"><?php esc_html_e('Import the example form', 'product-finder-for-gravity-forms'); ?></button></p>
                 </form>
             </div>
         <?php else: ?>
             <p>
-                <?php esc_html_e('Or, want to try with our example form?', 'gravity-recommender'); ?>
+                <?php esc_html_e('Or, want to try with our example form?', 'product-finder-for-gravity-forms'); ?>
             </p>
             <form method="post" action="" style="margin-bottom: 16px;">
                 <?php wp_nonce_field('gr_onboarding', 'gr_nonce'); ?>
                 <input type="hidden" name="gr_action" value="import_example_form" />
-                <button type="submit" class="button"><?php esc_html_e('Import the example form', 'gravity-recommender'); ?></button>
+                <button type="submit" class="button"><?php esc_html_e('Import the example form', 'product-finder-for-gravity-forms'); ?></button>
             </form>
         <?php endif; ?>
 
@@ -392,10 +392,10 @@ class GR_Admin_Onboarding {
 
             <table class="form-table">
                 <tr>
-                    <th><label for="gr_form_id"><?php esc_html_e('Gravity Form', 'gravity-recommender'); ?></label></th>
+                    <th><label for="gr_form_id"><?php esc_html_e('Gravity Form', 'product-finder-for-gravity-forms'); ?></label></th>
                     <td>
                         <select name="gr_form_id" id="gr_form_id" required>
-                            <option value=""><?php esc_html_e('— Select a form —', 'gravity-recommender'); ?></option>
+                            <option value=""><?php esc_html_e('— Select a form —', 'product-finder-for-gravity-forms'); ?></option>
                             <?php foreach ($forms as $form):
                                 $hidden_fields = $this->extract_hidden_fields($form);
                                 ?>
@@ -409,19 +409,19 @@ class GR_Admin_Onboarding {
                     </td>
                 </tr>
                 <tr>
-                    <th><label for="gr_field_id_select"><?php esc_html_e('Hidden field for the JSON', 'gravity-recommender'); ?></label></th>
+                    <th><label for="gr_field_id_select"><?php esc_html_e('Hidden field for the JSON', 'product-finder-for-gravity-forms'); ?></label></th>
                     <td>
                         <select name="gr_field_id" id="gr_field_id_select">
-                            <option value=""><?php esc_html_e('— Auto-detected —', 'gravity-recommender'); ?></option>
+                            <option value=""><?php esc_html_e('— Auto-detected —', 'product-finder-for-gravity-forms'); ?></option>
                         </select>
-                        <input type="text" id="gr_field_id_manual" value="" placeholder="<?php esc_attr_e('or type field ID manually', 'gravity-recommender'); ?>" style="display: none; margin-left: 8px;" />
-                        <p class="description" id="gr_field_id_hint"><?php esc_html_e('Pick a form above and we\'ll detect its hidden field(s).', 'gravity-recommender'); ?></p>
+                        <input type="text" id="gr_field_id_manual" value="" placeholder="<?php esc_attr_e('or type field ID manually', 'product-finder-for-gravity-forms'); ?>" style="display: none; margin-left: 8px;" />
+                        <p class="description" id="gr_field_id_hint"><?php esc_html_e('Pick a form above and we\'ll detect its hidden field(s).', 'product-finder-for-gravity-forms'); ?></p>
                     </td>
                 </tr>
             </table>
 
             <div class="gr-actions">
-                <button type="submit" class="button button-primary"><?php esc_html_e('Save & continue →', 'gravity-recommender'); ?></button>
+                <button type="submit" class="button button-primary"><?php esc_html_e('Save & continue →', 'product-finder-for-gravity-forms'); ?></button>
             </div>
 
             <script>
@@ -451,7 +451,7 @@ class GR_Admin_Onboarding {
                         fieldManual.style.display = 'inline-block';
                         fieldManual.name = 'gr_field_id';
                         fieldManual.value = currentFieldId || '';
-                        hint.textContent = <?php echo wp_json_encode(esc_html__('No hidden field found in this form. Add one in Gravity Forms (Hidden field), then type its ID here.', 'gravity-recommender')); ?>;
+                        hint.textContent = <?php echo wp_json_encode(esc_html__('No hidden field found in this form. Add one in Gravity Forms (Hidden field), then type its ID here.', 'product-finder-for-gravity-forms')); ?>;
                         return;
                     }
 
@@ -470,9 +470,9 @@ class GR_Admin_Onboarding {
 
                     if (hidden.length === 1) {
                         fieldSel.value = hidden[0].id;
-                        hint.textContent = <?php echo wp_json_encode(esc_html__('One hidden field found and selected automatically.', 'gravity-recommender')); ?>;
+                        hint.textContent = <?php echo wp_json_encode(esc_html__('One hidden field found and selected automatically.', 'product-finder-for-gravity-forms')); ?>;
                     } else {
-                        hint.textContent = <?php echo wp_json_encode(esc_html__('Multiple hidden fields detected. Pick the one that should store the recommendation result.', 'gravity-recommender')); ?>;
+                        hint.textContent = <?php echo wp_json_encode(esc_html__('Multiple hidden fields detected. Pick the one that should store the recommendation result.', 'product-finder-for-gravity-forms')); ?>;
                     }
                 }
 
@@ -490,27 +490,27 @@ class GR_Admin_Onboarding {
         $field_id = (string) ($config['field_id'] ?? '');
         $shortcode = sprintf('[gravity_recommender form_id="%d" field_id="%s"]', $form_id, $field_id);
         ?>
-        <h2>🎉 <?php esc_html_e('You\'re ready', 'gravity-recommender'); ?></h2>
-        <p><?php esc_html_e('Paste this shortcode into your Gravity Form confirmation message (Form settings → Confirmations → Text):', 'gravity-recommender'); ?></p>
+        <h2>🎉 <?php esc_html_e('You\'re ready', 'product-finder-for-gravity-forms'); ?></h2>
+        <p><?php esc_html_e('Paste this shortcode into your Gravity Form confirmation message (Form settings → Confirmations → Text):', 'product-finder-for-gravity-forms'); ?></p>
 
         <pre style="background: #f6f7f7; padding: 14px; border: 1px solid #ddd; font-size: 14px; user-select: all;"><?php echo esc_html($shortcode); ?></pre>
 
-        <h3><?php esc_html_e('Next: define scoring rules', 'gravity-recommender'); ?></h3>
-        <p><?php esc_html_e('Right now any product can be recommended (no rules defined). Head to Scoring Rules to express things like "if the visitor picks X, boost product A by 20 points and exclude product B".', 'gravity-recommender'); ?></p>
+        <h3><?php esc_html_e('Next: define scoring rules', 'product-finder-for-gravity-forms'); ?></h3>
+        <p><?php esc_html_e('Right now any product can be recommended (no rules defined). Head to Scoring Rules to express things like "if the visitor picks X, boost product A by 20 points and exclude product B".', 'product-finder-for-gravity-forms'); ?></p>
 
         <div class="gr-actions">
             <a href="<?php echo esc_url(admin_url('edit.php?post_type=' . GR_Product_CPT::POST_TYPE . '&page=gr-scoring-rules')); ?>" class="button button-primary">
-                <?php esc_html_e('Go to Scoring Rules →', 'gravity-recommender'); ?>
+                <?php esc_html_e('Go to Scoring Rules →', 'product-finder-for-gravity-forms'); ?>
             </a>
             <a href="<?php echo esc_url(admin_url('edit.php?post_type=' . GR_Product_CPT::POST_TYPE . '&page=gr-help')); ?>" class="button">
-                <?php esc_html_e('Read the Help page', 'gravity-recommender'); ?>
+                <?php esc_html_e('Read the Help page', 'product-finder-for-gravity-forms'); ?>
             </a>
         </div>
 
         <form method="post" action="" style="margin-top: 30px;">
             <?php wp_nonce_field('gr_onboarding', 'gr_nonce'); ?>
             <input type="hidden" name="gr_action" value="reset" />
-            <button type="submit" class="button-link" style="color: #666;"><?php esc_html_e('Restart the wizard', 'gravity-recommender'); ?></button>
+            <button type="submit" class="button-link" style="color: #666;"><?php esc_html_e('Restart the wizard', 'product-finder-for-gravity-forms'); ?></button>
         </form>
         <?php
     }
@@ -527,7 +527,7 @@ class GR_Admin_Onboarding {
             if (($field['type'] ?? '') === 'hidden') {
                 $result[] = [
                     'id'    => (string) $field['id'],
-                    'label' => (string) ($field['label'] ?? __('(no label)', 'gravity-recommender')),
+                    'label' => (string) ($field['label'] ?? __('(no label)', 'product-finder-for-gravity-forms')),
                 ];
             }
         }

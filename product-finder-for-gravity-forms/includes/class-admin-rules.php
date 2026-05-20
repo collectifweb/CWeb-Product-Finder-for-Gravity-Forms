@@ -33,8 +33,8 @@ class GR_Admin_Rules {
     public function register_menu(): void {
         add_submenu_page(
             'edit.php?post_type=' . GR_Product_CPT::POST_TYPE,
-            __('Scoring Rules', 'gravity-recommender'),
-            __('Scoring Rules', 'gravity-recommender'),
+            __('Scoring Rules', 'product-finder-for-gravity-forms'),
+            __('Scoring Rules', 'product-finder-for-gravity-forms'),
             'manage_options',
             self::PAGE_SLUG,
             [$this, 'render_page']
@@ -43,7 +43,7 @@ class GR_Admin_Rules {
 
     public function handle_save(): void {
         if (!current_user_can('manage_options')) {
-            wp_die(esc_html__('Permission denied.', 'gravity-recommender'));
+            wp_die(esc_html__('Permission denied.', 'product-finder-for-gravity-forms'));
         }
         check_admin_referer('gr_save_rules');
 
@@ -68,18 +68,18 @@ class GR_Admin_Rules {
 
         ?>
         <div class="wrap gr-rules">
-            <h1 class="wp-heading-inline"><?php esc_html_e('Scoring Rules', 'gravity-recommender'); ?></h1>
+            <h1 class="wp-heading-inline"><?php esc_html_e('Scoring Rules', 'product-finder-for-gravity-forms'); ?></h1>
 
             <?php
             // Display-only success message after wp_safe_redirect from handle_save(). No state change → no nonce needed.
             // phpcs:ignore WordPress.Security.NonceVerification.Recommended
             if (!empty($_GET['saved'])):
             ?>
-                <div class="notice notice-success is-dismissible"><p><?php esc_html_e('Rules saved.', 'gravity-recommender'); ?></p></div>
+                <div class="notice notice-success is-dismissible"><p><?php esc_html_e('Rules saved.', 'product-finder-for-gravity-forms'); ?></p></div>
             <?php endif; ?>
 
             <p class="description" style="max-width: 800px;">
-                <?php esc_html_e('A rule says: when your visitor answers a form question in a specific way, then adjust the score of one or more products. Combine rules to express any selection logic — no code needed.', 'gravity-recommender'); ?>
+                <?php esc_html_e('A rule says: when your visitor answers a form question in a specific way, then adjust the score of one or more products. Combine rules to express any selection logic — no code needed.', 'product-finder-for-gravity-forms'); ?>
             </p>
 
             <?php if (!$form_id || !$form): ?>
@@ -87,8 +87,8 @@ class GR_Admin_Rules {
                     <p><?php
                         printf(
                             /* translators: %s is a link to the Setup page */
-                            esc_html__('No Gravity Form is configured yet. %s first.', 'gravity-recommender'),
-                            '<a href="' . esc_url(admin_url('edit.php?post_type=' . GR_Product_CPT::POST_TYPE . '&page=gr-onboarding')) . '">' . esc_html__('Complete the Setup wizard', 'gravity-recommender') . '</a>'
+                            esc_html__('No Gravity Form is configured yet. %s first.', 'product-finder-for-gravity-forms'),
+                            '<a href="' . esc_url(admin_url('edit.php?post_type=' . GR_Product_CPT::POST_TYPE . '&page=gr-onboarding')) . '">' . esc_html__('Complete the Setup wizard', 'product-finder-for-gravity-forms') . '</a>'
                         );
                     ?></p>
                 </div>
@@ -100,8 +100,8 @@ class GR_Admin_Rules {
                     <p><?php
                         printf(
                             /* translators: %s is a link to "add product" */
-                            esc_html__('You need at least one product before creating rules. %s.', 'gravity-recommender'),
-                            '<a href="' . esc_url(admin_url('post-new.php?post_type=' . GR_Product_CPT::POST_TYPE)) . '">' . esc_html__('Add a product', 'gravity-recommender') . '</a>'
+                            esc_html__('You need at least one product before creating rules. %s.', 'product-finder-for-gravity-forms'),
+                            '<a href="' . esc_url(admin_url('post-new.php?post_type=' . GR_Product_CPT::POST_TYPE)) . '">' . esc_html__('Add a product', 'product-finder-for-gravity-forms') . '</a>'
                         );
                     ?></p>
                 </div>
@@ -109,7 +109,7 @@ class GR_Admin_Rules {
 
             <?php if (empty($fields)): ?>
                 <div class="notice notice-info inline">
-                    <p><?php esc_html_e('No restricted-answer field found in the configured form. Scoring rules only work with radio, dropdown, or checkbox fields — not free-text inputs.', 'gravity-recommender'); ?></p>
+                    <p><?php esc_html_e('No restricted-answer field found in the configured form. Scoring rules only work with radio, dropdown, or checkbox fields — not free-text inputs.', 'product-finder-for-gravity-forms'); ?></p>
                 </div>
             <?php endif; ?>
 
@@ -125,12 +125,12 @@ class GR_Admin_Rules {
 
                 <p>
                     <button type="button" class="button button-secondary" id="gr-add-rule" <?php disabled(empty($fields) || empty($products)); ?>>
-                        + <?php esc_html_e('Add a rule', 'gravity-recommender'); ?>
+                        + <?php esc_html_e('Add a rule', 'product-finder-for-gravity-forms'); ?>
                     </button>
                 </p>
 
                 <p>
-                    <button type="submit" class="button button-primary"><?php esc_html_e('Save all rules', 'gravity-recommender'); ?></button>
+                    <button type="submit" class="button button-primary"><?php esc_html_e('Save all rules', 'product-finder-for-gravity-forms'); ?></button>
                 </p>
             </form>
 
@@ -156,17 +156,17 @@ class GR_Admin_Rules {
                 <input type="text"
                        name="gr_rules[<?php echo esc_attr((string) $ridx); ?>][name]"
                        value="<?php echo esc_attr($rule['name'] ?? ''); ?>"
-                       placeholder="<?php esc_attr_e('Rule label (for your own reference)', 'gravity-recommender'); ?>"
+                       placeholder="<?php esc_attr_e('Rule label (for your own reference)', 'product-finder-for-gravity-forms'); ?>"
                        class="gr-rule-name" />
-                <button type="button" class="button-link gr-remove-rule" title="<?php esc_attr_e('Remove rule', 'gravity-recommender'); ?>">✕</button>
+                <button type="button" class="button-link gr-remove-rule" title="<?php esc_attr_e('Remove rule', 'product-finder-for-gravity-forms'); ?>">✕</button>
             </div>
 
             <div class="gr-rule-section">
                 <div class="gr-rule-section-title">
-                    <strong><?php esc_html_e('When', 'gravity-recommender'); ?></strong>
+                    <strong><?php esc_html_e('When', 'product-finder-for-gravity-forms'); ?></strong>
                     <select name="gr_rules[<?php echo esc_attr((string) $ridx); ?>][condition_logic]">
-                        <option value="all" <?php selected($rule['condition_logic'] ?? 'all', 'all'); ?>><?php esc_html_e('all of these are true (AND)', 'gravity-recommender'); ?></option>
-                        <option value="any" <?php selected($rule['condition_logic'] ?? '', 'any'); ?>><?php esc_html_e('any of these is true (OR)', 'gravity-recommender'); ?></option>
+                        <option value="all" <?php selected($rule['condition_logic'] ?? 'all', 'all'); ?>><?php esc_html_e('all of these are true (AND)', 'product-finder-for-gravity-forms'); ?></option>
+                        <option value="any" <?php selected($rule['condition_logic'] ?? '', 'any'); ?>><?php esc_html_e('any of these is true (OR)', 'product-finder-for-gravity-forms'); ?></option>
                     </select>
                 </div>
                 <div class="gr-conditions">
@@ -177,11 +177,11 @@ class GR_Admin_Rules {
                     }
                     ?>
                 </div>
-                <p><button type="button" class="button-link gr-add-condition">+ <?php esc_html_e('Add condition', 'gravity-recommender'); ?></button></p>
+                <p><button type="button" class="button-link gr-add-condition">+ <?php esc_html_e('Add condition', 'product-finder-for-gravity-forms'); ?></button></p>
             </div>
 
             <div class="gr-rule-section">
-                <div class="gr-rule-section-title"><strong><?php esc_html_e('Then', 'gravity-recommender'); ?></strong></div>
+                <div class="gr-rule-section-title"><strong><?php esc_html_e('Then', 'product-finder-for-gravity-forms'); ?></strong></div>
                 <div class="gr-effects">
                     <?php
                     $effects = !empty($rule['effects']) && is_array($rule['effects']) ? $rule['effects'] : [['action' => 'boost', 'product_id' => 0, 'points' => 10]];
@@ -190,7 +190,7 @@ class GR_Admin_Rules {
                     }
                     ?>
                 </div>
-                <p><button type="button" class="button-link gr-add-effect">+ <?php esc_html_e('Add another effect', 'gravity-recommender'); ?></button></p>
+                <p><button type="button" class="button-link gr-add-effect">+ <?php esc_html_e('Add another effect', 'product-finder-for-gravity-forms'); ?></button></p>
             </div>
         </div>
         <?php
@@ -204,7 +204,7 @@ class GR_Admin_Rules {
         ?>
         <div class="gr-condition-row" data-cidx="<?php echo esc_attr((string) $cidx); ?>">
             <select name="<?php echo esc_attr($name . '[field_id]'); ?>" class="gr-cond-field">
-                <option value=""><?php esc_html_e('— Select field —', 'gravity-recommender'); ?></option>
+                <option value=""><?php esc_html_e('— Select field —', 'product-finder-for-gravity-forms'); ?></option>
                 <?php foreach ($fields as $field): ?>
                     <option
                         value="<?php echo esc_attr($field['id']); ?>"
@@ -216,14 +216,14 @@ class GR_Admin_Rules {
             </select>
 
             <select name="<?php echo esc_attr($name . '[operator]'); ?>" class="gr-cond-operator">
-                <option value="equals"     <?php selected($cond['operator'] ?? 'equals', 'equals'); ?>><?php esc_html_e('is', 'gravity-recommender'); ?></option>
-                <option value="not_equals" <?php selected($cond['operator'] ?? '', 'not_equals'); ?>><?php esc_html_e('is not', 'gravity-recommender'); ?></option>
-                <option value="contains"   <?php selected($cond['operator'] ?? '', 'contains'); ?>><?php esc_html_e('contains', 'gravity-recommender'); ?></option>
-                <option value="not_empty"  <?php selected($cond['operator'] ?? '', 'not_empty'); ?>><?php esc_html_e('is filled', 'gravity-recommender'); ?></option>
+                <option value="equals"     <?php selected($cond['operator'] ?? 'equals', 'equals'); ?>><?php esc_html_e('is', 'product-finder-for-gravity-forms'); ?></option>
+                <option value="not_equals" <?php selected($cond['operator'] ?? '', 'not_equals'); ?>><?php esc_html_e('is not', 'product-finder-for-gravity-forms'); ?></option>
+                <option value="contains"   <?php selected($cond['operator'] ?? '', 'contains'); ?>><?php esc_html_e('contains', 'product-finder-for-gravity-forms'); ?></option>
+                <option value="not_empty"  <?php selected($cond['operator'] ?? '', 'not_empty'); ?>><?php esc_html_e('is filled', 'product-finder-for-gravity-forms'); ?></option>
             </select>
 
             <select name="<?php echo esc_attr($name . '[value]'); ?>" class="gr-cond-value">
-                <option value=""><?php esc_html_e('— pick a choice —', 'gravity-recommender'); ?></option>
+                <option value=""><?php esc_html_e('— pick a choice —', 'product-finder-for-gravity-forms'); ?></option>
                 <?php
                 // Pré-remplit avec les choix du field sélectionné (si connu).
                 $choices = [];
@@ -238,11 +238,11 @@ class GR_Admin_Rules {
                     <option value="<?php echo esc_attr($choice); ?>" <?php selected($current_value, $choice); ?>><?php echo esc_html($choice); ?></option>
                 <?php endforeach; ?>
                 <?php if ($current_value !== '' && !in_array($current_value, $choices, true)): ?>
-                    <option value="<?php echo esc_attr($current_value); ?>" selected><?php echo esc_html($current_value); ?> <?php esc_html_e('(custom)', 'gravity-recommender'); ?></option>
+                    <option value="<?php echo esc_attr($current_value); ?>" selected><?php echo esc_html($current_value); ?> <?php esc_html_e('(custom)', 'product-finder-for-gravity-forms'); ?></option>
                 <?php endif; ?>
             </select>
 
-            <button type="button" class="button-link gr-remove-condition" title="<?php esc_attr_e('Remove condition', 'gravity-recommender'); ?>">✕</button>
+            <button type="button" class="button-link gr-remove-condition" title="<?php esc_attr_e('Remove condition', 'product-finder-for-gravity-forms'); ?>">✕</button>
         </div>
         <?php
     }
@@ -254,14 +254,14 @@ class GR_Admin_Rules {
         ?>
         <div class="gr-effect-row" data-eidx="<?php echo esc_attr((string) $eidx); ?>">
             <select name="<?php echo esc_attr($name . '[action]'); ?>" class="gr-effect-action">
-                <option value="boost"   <?php selected($action, 'boost'); ?>><?php esc_html_e('+ Boost', 'gravity-recommender'); ?></option>
-                <option value="penalty" <?php selected($action, 'penalty'); ?>><?php esc_html_e('− Penalize', 'gravity-recommender'); ?></option>
-                <option value="exclude" <?php selected($action, 'exclude'); ?>><?php esc_html_e('🚫 Exclude', 'gravity-recommender'); ?></option>
-                <option value="require" <?php selected($action, 'require'); ?>><?php esc_html_e('✅ Require', 'gravity-recommender'); ?></option>
+                <option value="boost"   <?php selected($action, 'boost'); ?>><?php esc_html_e('+ Boost', 'product-finder-for-gravity-forms'); ?></option>
+                <option value="penalty" <?php selected($action, 'penalty'); ?>><?php esc_html_e('− Penalize', 'product-finder-for-gravity-forms'); ?></option>
+                <option value="exclude" <?php selected($action, 'exclude'); ?>><?php esc_html_e('🚫 Exclude', 'product-finder-for-gravity-forms'); ?></option>
+                <option value="require" <?php selected($action, 'require'); ?>><?php esc_html_e('✅ Require', 'product-finder-for-gravity-forms'); ?></option>
             </select>
 
             <select name="<?php echo esc_attr($name . '[product_id]'); ?>" class="gr-effect-product">
-                <option value="0"><?php esc_html_e('— Select product —', 'gravity-recommender'); ?></option>
+                <option value="0"><?php esc_html_e('— Select product —', 'product-finder-for-gravity-forms'); ?></option>
                 <?php foreach ($products as $p): ?>
                     <option value="<?php echo (int) $p['id']; ?>" <?php selected((int) ($effect['product_id'] ?? 0), (int) $p['id']); ?>>
                         <?php echo esc_html($p['name']); ?>
@@ -270,12 +270,12 @@ class GR_Admin_Rules {
             </select>
 
             <span class="gr-effect-points-wrap" <?php echo in_array($action, ['exclude', 'require'], true) ? 'style="display:none;"' : ''; ?>>
-                <?php esc_html_e('by', 'gravity-recommender'); ?>
+                <?php esc_html_e('by', 'product-finder-for-gravity-forms'); ?>
                 <input type="number" name="<?php echo esc_attr($name . '[points]'); ?>" value="<?php echo esc_attr((string) ($effect['points'] ?? 10)); ?>" min="0" step="1" style="width: 70px;" />
-                <?php esc_html_e('points', 'gravity-recommender'); ?>
+                <?php esc_html_e('points', 'product-finder-for-gravity-forms'); ?>
             </span>
 
-            <button type="button" class="button-link gr-remove-effect" title="<?php esc_attr_e('Remove effect', 'gravity-recommender'); ?>">✕</button>
+            <button type="button" class="button-link gr-remove-effect" title="<?php esc_attr_e('Remove effect', 'product-finder-for-gravity-forms'); ?>">✕</button>
         </div>
         <?php
     }
@@ -464,7 +464,7 @@ class GR_Admin_Rules {
                     const row = e.target.closest('.gr-condition-row');
                     const valueSelect = row.querySelector('.gr-cond-value');
                     const choices = JSON.parse(e.target.selectedOptions[0]?.dataset.choices || '[]');
-                    valueSelect.innerHTML = '<option value=""><?php echo esc_js(__('— pick a choice —', 'gravity-recommender')); ?></option>'
+                    valueSelect.innerHTML = '<option value=""><?php echo esc_js(__('— pick a choice —', 'product-finder-for-gravity-forms')); ?></option>'
                         + choices.map(c => `<option value="${c.replace(/"/g, '&quot;')}">${c}</option>`).join('');
                 }
                 if (e.target.classList.contains('gr-cond-operator')) {
