@@ -10,7 +10,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-class GR_Woo_Source implements GR_Product_Source {
+class CWebPF_Woo_Source implements CWebPF_Product_Source {
 
     public function get_all_products(): array {
         if (!function_exists('wc_get_products')) {
@@ -56,7 +56,7 @@ class GR_Woo_Source implements GR_Product_Source {
     private function normalize_product($product): array {
         $id = $product->get_id();
 
-        $features_meta = (string) get_post_meta($id, '_gr_features', true);
+        $features_meta = (string) get_post_meta($id, '_cwebpf_features', true);
         if ($features_meta === '') {
             // Fallback : attributs visibles WooCommerce
             $attributes = $product->get_attributes();
@@ -70,12 +70,12 @@ class GR_Woo_Source implements GR_Product_Source {
             $features = array_values(array_filter(array_map('trim', preg_split('/\r\n|\r|\n/', $features_meta))));
         }
 
-        $payment_url = get_post_meta($id, '_gr_payment_url', true);
+        $payment_url = get_post_meta($id, '_cwebpf_payment_url', true);
         if (!$payment_url) {
             $payment_url = $product->add_to_cart_url();
         }
 
-        $cta_label = (string) get_post_meta($id, '_gr_cta_label', true);
+        $cta_label = (string) get_post_meta($id, '_cwebpf_cta_label', true);
         if ($cta_label === '') {
             $cta_label = $product->add_to_cart_text();
         }

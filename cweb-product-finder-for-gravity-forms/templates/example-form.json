@@ -51,7 +51,7 @@
         "type": "hidden",
         "id": 4,
         "label": "Recommendation result (JSON)",
-        "adminLabel": "gr_recommendation",
+        "adminLabel": "cwebpf_recommendation",
         "isRequired": false,
         "defaultValue": ""
       }
@@ -61,7 +61,7 @@
         "id": "default",
         "name": "Default Confirmation",
         "type": "message",
-        "message": "<h2>Your recommendation</h2>[gravity_recommender field_id=\"4\"]",
+        "message": "<h2>Your recommendation</h2>[cwebpf_recommender field_id=\"4\"]",
         "isDefault": true,
         "disableAutoformat": false
       }

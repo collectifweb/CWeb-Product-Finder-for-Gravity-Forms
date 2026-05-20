@@ -1,17 +1,17 @@
 <?php
 /**
- * Source de produits basée sur le Custom Post Type `gr_product`.
+ * Source de produits basée sur le Custom Post Type `cwebpf_product`.
  */
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
-class GR_CPT_Source implements GR_Product_Source {
+class CWebPF_CPT_Source implements CWebPF_Product_Source {
 
     public function get_all_products(): array {
         $posts = get_posts([
-            'post_type'      => GR_Product_CPT::POST_TYPE,
+            'post_type'      => CWebPF_Product_CPT::POST_TYPE,
             'post_status'    => 'publish',
             'numberposts'    => -1,
             'orderby'        => 'menu_order title',
@@ -23,7 +23,7 @@ class GR_CPT_Source implements GR_Product_Source {
 
     public function get_product(int $id): ?array {
         $post = get_post($id);
-        if (!$post || $post->post_type !== GR_Product_CPT::POST_TYPE || $post->post_status !== 'publish') {
+        if (!$post || $post->post_type !== CWebPF_Product_CPT::POST_TYPE || $post->post_status !== 'publish') {
             return null;
         }
         return $this->normalize_post($post);
@@ -41,7 +41,7 @@ class GR_CPT_Source implements GR_Product_Source {
     }
 
     private function normalize_post(WP_Post $post): array {
-        $meta = GR_Product_CPT::get_meta_values($post->ID);
+        $meta = CWebPF_Product_CPT::get_meta_values($post->ID);
 
         $features = array_values(array_filter(array_map('trim', preg_split('/\r\n|\r|\n/', $meta['features']))));
         $payment_url = $meta['payment_url'] !== '' ? $meta['payment_url'] : $meta['page_url'];
@@ -55,7 +55,7 @@ class GR_CPT_Source implements GR_Product_Source {
             'description' => $meta['description'],
             'page_url'    => $meta['page_url'],
             'payment_url' => $payment_url,
-            'cta_label'   => $meta['cta_label'] !== '' ? $meta['cta_label'] : __('Add to cart', 'product-finder-for-gravity-forms'),
+            'cta_label'   => $meta['cta_label'] !== '' ? $meta['cta_label'] : __('Add to cart', 'cweb-product-finder-for-gravity-forms'),
             'image_url'   => $thumbnail ?: '',
         ];
     }

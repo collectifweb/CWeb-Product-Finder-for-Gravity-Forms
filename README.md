@@ -1,4 +1,4 @@
-# Product Finder for Gravity Forms
+# CWeb Product Finder for Gravity Forms
 
 > A rules-based product recommender that plugs into the end of any Gravity Forms questionnaire. No external API — all scoring happens locally in PHP.
 
@@ -6,7 +6,7 @@
 ![PHP >= 8.0](https://img.shields.io/badge/PHP-%3E%3D%208.0-777BB4)
 ![WordPress >= 6.0](https://img.shields.io/badge/WordPress-%3E%3D%206.0-21759B)
 
-**Product Finder for Gravity Forms** takes a visitor's answers from a Gravity Forms form, scores each of your products against those answers using a condition/effect rules system you configure in WordPress admin, and renders the best match (plus a couple of alternatives) as styled cards on the form confirmation page.
+**CWeb Product Finder for Gravity Forms** takes a visitor's answers from a Gravity Forms form, scores each of your products against those answers using a condition/effect rules system you configure in WordPress admin, and renders the best match (plus a couple of alternatives) as styled cards on the form confirmation page.
 
 It works with two product sources: a lightweight built-in Custom Post Type, or your existing WooCommerce products.
 
@@ -39,15 +39,15 @@ JSON result saved in a hidden GF field
 gform_confirmation  →  Shortcode receives entry_id
     │
     ▼
-[gravity_recommender] →  Renders product cards
+[cwebpf_recommender] →  Renders product cards
 ```
 
 See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the full design.
 
 ## Installation
 
-1. Drop the [`product-finder-for-gravity-forms/`](product-finder-for-gravity-forms/) folder into `wp-content/plugins/`.
-2. Activate **Product Finder for Gravity Forms** in WordPress.
+1. Drop the [`cweb-product-finder-for-gravity-forms/`](cweb-product-finder-for-gravity-forms/) folder into `wp-content/plugins/`.
+2. Activate **CWeb Product Finder for Gravity Forms** in WordPress.
 3. Go to **Recommender → Setup** and follow the wizard:
    1. Welcome / dependency check (Gravity Forms required)
    2. Pick the product source (CPT or WooCommerce)
@@ -78,8 +78,8 @@ The engine sums boosts/penalties across all matched rules, applies excludes and 
 The setup wizard saves these in `wp_options`. To override them programmatically (e.g. across environments), use filters:
 
 ```php
-add_filter('gr_form_id',  fn() => 7);
-add_filter('gr_field_id', fn() => '50');
+add_filter('cwebpf_form_id',  fn() => 7);
+add_filter('cwebpf_field_id', fn() => '50');
 ```
 
 ### Custom explanation
@@ -87,26 +87,26 @@ add_filter('gr_field_id', fn() => '50');
 Replace the default "Based on your answers, we recommend X" with your own copy:
 
 ```php
-add_filter('gr_recommendation_explanation', function ($default, $product, $context) {
+add_filter('cwebpf_recommendation_explanation', function ($default, $product, $context) {
     return 'Because of your answers, we suggest ' . $product['name'] . '.';
 }, 10, 3);
 ```
 
 ### AI fallback (optional)
 
-When no rule matches, you can plug your own AI service via the `gr_ai_fallback_recommendation` filter. No default implementation is shipped — the filter is empty unless you provide a callback.
+When no rule matches, you can plug your own AI service via the `cwebpf_ai_fallback_recommendation` filter. No default implementation is shipped — the filter is empty unless you provide a callback.
 
 ### Theming
 
-CSS classes are prefixed `.gr-*`. Colors and fonts are CSS custom properties — override them in your theme:
+CSS classes are prefixed `.cwebpf-*`. Colors and fonts are CSS custom properties — override them in your theme:
 
 ```css
 :root {
-    --gr-primary:        #1f2937;
-    --gr-secondary:      #3b82f6;
-    --gr-accent:         #f59e0b;
-    --gr-font-heading:   'Inter', sans-serif;
-    --gr-font-body:      'Inter', sans-serif;
+    --cwebpf-primary:        #1f2937;
+    --cwebpf-secondary:      #3b82f6;
+    --cwebpf-accent:         #f59e0b;
+    --cwebpf-font-heading:   'Inter', sans-serif;
+    --cwebpf-font-body:      'Inter', sans-serif;
 }
 ```
 

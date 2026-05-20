@@ -1,4 +1,4 @@
-# Product Finder for Gravity Forms — Architecture
+# CWeb Product Finder for Gravity Forms — Architecture
 
 ## Overview
 
@@ -8,65 +8,69 @@ A WordPress plugin that scores a set of products against a Gravity Forms submiss
 Visitor submits the Gravity Form
     │
     ▼
-GR_GF_Integration::process_entry()
-  ↳ reads the active rules (`gr_scoring_rules`)
-  ↳ asks GR_Recommendation_Engine for a result
+CWebPF_GF_Integration::process_entry()
+  ↳ reads the active rules (`cwebpf_scoring_rules`)
+  ↳ asks CWebPF_Recommendation_Engine for a result
   ↳ writes the JSON result into the form's hidden field
     │
     ▼
-GR_GF_Integration::customize_confirmation()
-  ↳ rewrites the [gravity_recommender] shortcode in the confirmation,
+CWebPF_GF_Integration::customize_confirmation()
+  ↳ rewrites the [cwebpf_recommender] shortcode in the confirmation,
     injecting the entry_id so the shortcode reads from THIS submission
     │
     ▼
-GR_Shortcode_Handler::render_shortcode()
+CWebPF_Shortcode_Handler::render_shortcode()
   ↳ pulls the JSON back from the entry
-  ↳ resolves product IDs via the active GR_Product_Source
+  ↳ resolves product IDs via the active CWebPF_Product_Source
   ↳ renders styled cards
 ```
 
 ## File layout
 
 ```
-product-finder-for-gravity-forms/
-├── product-finder-for-gravity-forms.php # Plugin header + bootstrap
+cweb-product-finder-for-gravity-forms/
+├── cweb-product-finder-for-gravity-forms.php # Plugin header + bootstrap
 ├── readme.txt                          # wordpress.org-format readme
 ├── includes/
-│   ├── class-product-cpt.php           # CPT `gr_product` + meta box
+│   ├── class-product-cpt.php           # CPT `cwebpf_product` + meta box
 │   ├── class-product-source.php        # Source interface + factory
 │   ├── class-cpt-source.php            # Source impl: built-in CPT
 │   ├── class-woo-source.php            # Source impl: WooCommerce
 │   ├── class-recommendation-engine.php # Rule-based scoring (direct product targeting)
 │   ├── class-gf-integration.php        # Hooks gform_entry_post_save + gform_confirmation
-│   ├── class-shortcode-handler.php     # Shortcode [gravity_recommender]
+│   ├── class-shortcode-handler.php     # Shortcode [cwebpf_recommender]
 │   ├── class-admin-onboarding.php      # 5-step setup wizard
 │   ├── class-admin-rules.php           # Dedicated Scoring Rules page
 │   └── class-admin-help.php            # Help & About page
 ├── templates/
 │   └── example-form.json               # Sample GF (SaaS Plan Picker)
 └── assets/
-    └── css/
-        └── product-cards.css           # `.gr-*` scoped styles, theme via CSS vars
+    ├── css/
+    │   ├── product-cards.css           # Front-end card styles (`.cwebpf-*` scoped, themed via CSS vars)
+    │   └── admin.css                   # Admin-only styles (wizard, rules editor, help page, meta box)
+    └── js/
+        ├── admin-rules.js              # Scoring Rules editor interactivity
+        └── admin-onboarding.js         # Wizard step 4 form-picker
 ```
 
 ## Data model
 
-### Product (built-in CPT `gr_product`)
+### Product (built-in CPT `cwebpf_product`)
 
-| Meta key          | Type    | Notes                                              |
-|-------------------|---------|----------------------------------------------------|
-| `_gr_price_label` | string  | Free-form, displayed on the card                   |
-| `_gr_features`    | string  | Newline-separated list                             |
-| `_gr_description` | string  | Short blurb                                        |
-| `_gr_page_url`    | url     | Product page                                       |
-| `_gr_payment_url` | url     | Cart / checkout link (falls back to `page_url`)    |
-| `_gr_cta_label`   | string  | Button label (default "Add to cart")               |
+| Meta key              | Type    | Notes                                              |
+|-----------------------|---------|----------------------------------------------------|
+| `_cwebpf_price_label` | string  | Free-form, displayed on the card                   |
+| `_cwebpf_features`    | string  | Newline-separated list                             |
+| `_cwebpf_description` | string  | Short blurb                                        |
+| `_cwebpf_page_url`    | url     | Product page                                       |
+| `_cwebpf_payment_url` | url     | Cart / checkout link (falls back to `page_url`)    |
+| `_cwebpf_cta_label`   | string  | Button label (default "Add to cart")               |
 
 ### Product (WooCommerce)
 
 The WooCommerce source reads native Woo fields (title, price HTML, image, add-to-cart URL). Products are referenced in rules by their post ID directly — no taxonomy involved.
 
-### Scoring rules — option `gr_scoring_rules`
+### Scoring rules — option `cwebpf_scoring_rules`
 
 Each rule pairs a list of **conditions** (combined with AND or OR) with a list of **effects** that target specific products by ID:
 
@@ -94,7 +98,7 @@ Supported condition operators: `equals` (case-insensitive equality, with checkbo
 
 The rule builder in the admin UI only exposes Gravity Forms fields with restricted answers (radio, dropdown, checkbox, multiselect) and pre-populates the value selector with that field's actual choices.
 
-### Form configuration — option `gr_form_config`
+### Form configuration — option `cwebpf_form_config`
 
 ```php
 [
@@ -103,7 +107,7 @@ The rule builder in the admin UI only exposes Gravity Forms fields with restrict
 ]
 ```
 
-### Source selector — option `gr_product_source`
+### Source selector — option `cwebpf_product_source`
 
 `'cpt'` (default) or `'woocommerce'`.
 
@@ -122,7 +126,7 @@ The rule builder in the admin UI only exposes Gravity Forms fields with restrict
    - Drop excluded products.
    - If at least one product is required, drop every non-required product too.
 5. Sort the eligible products by score descending (ties broken by post ID for stability).
-6. If no product is eligible, run the `gr_ai_fallback_recommendation` filter — if a plugged-in AI returns a recommendation, use it; otherwise fall through to the error message.
+6. If no product is eligible, run the `cwebpf_ai_fallback_recommendation` filter — if a plugged-in AI returns a recommendation, use it; otherwise fall through to the error message.
 7. Return the top product plus the next two as alternatives.
 
 ## Result format
@@ -143,13 +147,13 @@ This is written verbatim into the hidden GF field configured at setup. The short
 
 | Filter                              | Purpose                                                            |
 |-------------------------------------|--------------------------------------------------------------------|
-| `gr_form_id`                        | Override the listened Gravity Form ID                              |
-| `gr_field_id`                       | Override the hidden field that stores the JSON                     |
-| `gr_recommendation_explanation`     | Replace the default "Based on your answers..." copy                |
-| `gr_ai_fallback_recommendation`     | Plug an AI service to pick a product when no rule matches          |
-| `gr_card_disclaimer`                | Inject a disclaimer line under the cards (defaults to empty)       |
-| `gr_fallback_contact_url`           | URL used on the error fallback "Contact us" button                 |
-| `gr_gravityforms_affiliate_url`     | URL used by the "Get Gravity Forms" CTA on step 1 of the wizard    |
+| `cwebpf_form_id`                        | Override the listened Gravity Form ID                              |
+| `cwebpf_field_id`                       | Override the hidden field that stores the JSON                     |
+| `cwebpf_recommendation_explanation`     | Replace the default "Based on your answers..." copy                |
+| `cwebpf_ai_fallback_recommendation`     | Plug an AI service to pick a product when no rule matches          |
+| `cwebpf_card_disclaimer`                | Inject a disclaimer line under the cards (defaults to empty)       |
+| `cwebpf_fallback_contact_url`           | URL used on the error fallback "Contact us" button                 |
+| `cwebpf_gravityforms_url`               | URL used by the "Get Gravity Forms" CTA on step 1 of the wizard    |
 
 ## Requirements
 
@@ -165,11 +169,11 @@ This is written verbatim into the hidden GF field configured at setup. The short
 3. **Override styling** by setting CSS variables in your theme:
    ```css
    :root {
-       --gr-primary:        #1f2937;
-       --gr-secondary:      #3b82f6;
-       --gr-accent:         #f59e0b;
-       --gr-font-heading:   'Inter', sans-serif;
-       --gr-font-body:      'Inter', sans-serif;
+       --cwebpf-primary:        #1f2937;
+       --cwebpf-secondary:      #3b82f6;
+       --cwebpf-accent:         #f59e0b;
+       --cwebpf-font-heading:   'Inter', sans-serif;
+       --cwebpf-font-body:      'Inter', sans-serif;
    }
    ```
-4. **Override scoring** through the filters above, or by calling `GR_Recommendation_Engine::recommend($entry)` from your own integration.
+4. **Override scoring** through the filters above, or by calling `CWebPF_Recommendation_Engine::recommend($entry)` from your own integration.

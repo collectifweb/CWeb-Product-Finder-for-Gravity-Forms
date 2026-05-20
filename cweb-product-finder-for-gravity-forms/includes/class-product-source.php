@@ -3,7 +3,7 @@
  * Interface des sources de produits.
  *
  * Une source fournit au moteur la liste des produits avec leurs attributs.
- * Implémentations livrées : CPT natif (`GR_CPT_Source`) et WooCommerce (`GR_Woo_Source`).
+ * Implémentations livrées : CPT natif (`CWebPF_CPT_Source`) et WooCommerce (`CWebPF_Woo_Source`).
  *
  * Structure d'un produit normalisé :
  *   [
@@ -23,7 +23,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-interface GR_Product_Source {
+interface CWebPF_Product_Source {
 
     /** Retourne tous les produits disponibles. */
     public function get_all_products(): array;
@@ -38,15 +38,15 @@ interface GR_Product_Source {
 /**
  * Factory : retourne la source configurée dans les options du plugin.
  */
-class GR_Product_Source_Factory {
+class CWebPF_Product_Source_Factory {
 
-    public static function make(): GR_Product_Source {
-        $configured = get_option('gr_product_source', 'cpt');
+    public static function make(): CWebPF_Product_Source {
+        $configured = get_option('cwebpf_product_source', 'cpt');
 
         if ($configured === 'woocommerce' && class_exists('WooCommerce')) {
-            return new GR_Woo_Source();
+            return new CWebPF_Woo_Source();
         }
 
-        return new GR_CPT_Source();
+        return new CWebPF_CPT_Source();
     }
 }

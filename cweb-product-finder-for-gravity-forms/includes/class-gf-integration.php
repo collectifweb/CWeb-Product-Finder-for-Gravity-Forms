@@ -8,7 +8,7 @@
  *   2. gform_confirmation     → injecte entry_id dans le shortcode et remplace
  *                                un éventuel placeholder field_id="XX".
  *
- * Le form_id et le field_id sont configurés via l'option `gr_form_config`
+ * Le form_id et le field_id sont configurés via l'option `cwebpf_form_config`
  * (gérée par l'onboarding) et restent surchargeables via filtre.
  */
 
@@ -16,7 +16,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-class GR_GF_Integration {
+class CWebPF_GF_Integration {
 
     public function __construct() {
         add_filter('gform_entry_post_save', [$this, 'process_entry'], 10, 2);
@@ -24,15 +24,15 @@ class GR_GF_Integration {
     }
 
     private function form_id(): int {
-        $config = (array) get_option('gr_form_config', []);
+        $config = (array) get_option('cwebpf_form_config', []);
         $form_id = (int) ($config['form_id'] ?? 0);
-        return (int) apply_filters('gr_form_id', $form_id);
+        return (int) apply_filters('cwebpf_form_id', $form_id);
     }
 
     private function field_id(): string {
-        $config = (array) get_option('gr_form_config', []);
+        $config = (array) get_option('cwebpf_form_config', []);
         $field_id = (string) ($config['field_id'] ?? '');
-        return (string) apply_filters('gr_field_id', $field_id);
+        return (string) apply_filters('cwebpf_field_id', $field_id);
     }
 
     public function process_entry(array $entry, array $form): array {
@@ -43,7 +43,7 @@ class GR_GF_Integration {
             return $entry;
         }
 
-        $result = GR_Recommendation_Engine::recommend($entry);
+        $result = CWebPF_Recommendation_Engine::recommend($entry);
         $json = wp_json_encode($result, JSON_UNESCAPED_UNICODE);
 
         if (class_exists('GFAPI')) {
@@ -65,11 +65,11 @@ class GR_GF_Integration {
             $confirmation = str_replace('field_id="XX"', 'field_id="' . $field_id . '"', $confirmation);
         }
 
-        if (str_contains($confirmation, 'gravity_recommender')) {
+        if (str_contains($confirmation, 'cwebpf_recommender')) {
             $entry_id = (int) $entry['id'];
             $confirmation = str_replace(
-                '[gravity_recommender',
-                '[gravity_recommender entry_id="' . $entry_id . '"',
+                '[cwebpf_recommender',
+                '[cwebpf_recommender entry_id="' . $entry_id . '"',
                 $confirmation
             );
         }

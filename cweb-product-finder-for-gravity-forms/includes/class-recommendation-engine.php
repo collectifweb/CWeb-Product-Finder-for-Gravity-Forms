@@ -14,7 +14,7 @@
  *       exclude  → produit retiré des candidats
  *       require  → seuls les produits "require" sont éligibles
  *
- * Format stocké dans l'option `gr_scoring_rules` :
+ * Format stocké dans l'option `cwebpf_scoring_rules` :
  *
  *   [
  *     [
@@ -46,18 +46,18 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-class GR_Recommendation_Engine {
+class CWebPF_Recommendation_Engine {
 
-    private GR_Product_Source $source;
+    private CWebPF_Product_Source $source;
     private array $rules;
 
     public static function recommend(array $entry): array {
-        $source = GR_Product_Source_Factory::make();
-        $rules  = (array) get_option('gr_scoring_rules', []);
+        $source = CWebPF_Product_Source_Factory::make();
+        $rules  = (array) get_option('cwebpf_scoring_rules', []);
         return (new self($source, $rules))->calculate($entry);
     }
 
-    public function __construct(GR_Product_Source $source, array $rules) {
+    public function __construct(CWebPF_Product_Source $source, array $rules) {
         $this->source = $source;
         $this->rules  = $rules;
     }
@@ -66,7 +66,7 @@ class GR_Recommendation_Engine {
         $products = $this->source->get_all_products();
 
         if (empty($products)) {
-            return $this->build_empty_result(__('No products are configured yet.', 'product-finder-for-gravity-forms'));
+            return $this->build_empty_result(__('No products are configured yet.', 'cweb-product-finder-for-gravity-forms'));
         }
 
         $scores = [];
@@ -118,11 +118,11 @@ class GR_Recommendation_Engine {
         $eligible_ids = array_values($eligible_ids);
 
         if (empty($eligible_ids)) {
-            $ai_result = apply_filters('gr_ai_fallback_recommendation', null, $entry, $products);
+            $ai_result = apply_filters('cwebpf_ai_fallback_recommendation', null, $entry, $products);
             if (is_array($ai_result) && isset($ai_result['recommended_product_id'])) {
                 return $ai_result;
             }
-            return $this->build_empty_result(__('No product matched your answers. Please contact us for help.', 'product-finder-for-gravity-forms'));
+            return $this->build_empty_result(__('No product matched your answers. Please contact us for help.', 'cweb-product-finder-for-gravity-forms'));
         }
 
         usort($eligible_ids, function ($a, $b) use ($scores) {
@@ -237,14 +237,14 @@ class GR_Recommendation_Engine {
         $product = $this->source->get_product($product_id);
         $name = $product['name'] ?? '';
 
-        $custom = apply_filters('gr_recommendation_explanation', '', $product, $applied_rules);
+        $custom = apply_filters('cwebpf_recommendation_explanation', '', $product, $applied_rules);
         if (is_string($custom) && $custom !== '') {
             return $custom;
         }
 
         return sprintf(
             /* translators: %s is a product name */
-            __('Based on your answers, we recommend the %s.', 'product-finder-for-gravity-forms'),
+            __('Based on your answers, we recommend the %s.', 'cweb-product-finder-for-gravity-forms'),
             $name
         );
     }

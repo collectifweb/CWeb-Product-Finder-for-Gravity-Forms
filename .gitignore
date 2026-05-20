@@ -18,3 +18,10 @@ vendor/
 # WP.org Plugin Checker reports (diagnostic exports)
 gravity-recommender-*.json
 product-finder-for-gravity-forms-*.json
+cweb-product-finder-for-gravity-forms-*.json
+
+# Build artifacts
+*.zip
+
+# Local reviewer correspondence (.eml exports etc.)
+*.eml

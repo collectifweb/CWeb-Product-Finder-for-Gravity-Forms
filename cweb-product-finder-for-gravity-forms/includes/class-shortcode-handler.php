@@ -1,27 +1,27 @@
 <?php
 /**
- * Shortcode [gravity_recommender]
+ * Shortcode [cwebpf_recommender]
  *
  * Lit le JSON sauvé dans le champ caché Gravity Forms et affiche
  * les cartes produits via la source de produits configurée.
  *
  * Usage dans la confirmation GF :
- *   [gravity_recommender form_id="5" field_id="44"]
- *   [gravity_recommender entry_id="123" form_id="5" field_id="44"]
+ *   [cwebpf_recommender form_id="5" field_id="44"]
+ *   [cwebpf_recommender entry_id="123" form_id="5" field_id="44"]
  */
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
-class GR_Shortcode_Handler {
+class CWebPF_Shortcode_Handler {
 
     public function __construct() {
-        add_shortcode('gravity_recommender', [$this, 'render_shortcode']);
+        add_shortcode('cwebpf_recommender', [$this, 'render_shortcode']);
     }
 
     public function render_shortcode($atts): string {
-        $config = (array) get_option('gr_form_config', []);
+        $config = (array) get_option('cwebpf_form_config', []);
 
         $atts = shortcode_atts([
             'form_id'  => isset($config['form_id']) ? (string) $config['form_id'] : '',
@@ -109,7 +109,7 @@ class GR_Shortcode_Handler {
         $all_ids = array_unique(array_merge([$recommended_id], $alternative_ids));
         $all_ids = array_filter(array_slice($all_ids, 0, 3));
 
-        $source = GR_Product_Source_Factory::make();
+        $source = CWebPF_Product_Source_Factory::make();
         $products = $source->get_products($all_ids);
 
         if (empty($products)) {
@@ -118,24 +118,24 @@ class GR_Shortcode_Handler {
 
         ob_start();
         ?>
-        <div class="gr-recommendations-wrapper">
+        <div class="cwebpf-recommendations-wrapper">
             <?php if ($explanation): ?>
-                <div class="gr-explanation">
+                <div class="cwebpf-explanation">
                     <p><?php echo esc_html($explanation); ?></p>
                 </div>
             <?php endif; ?>
 
-            <div class="gr-products-grid">
+            <div class="cwebpf-products-grid">
                 <?php foreach ($products as $index => $product): ?>
                     <?php $this->render_single_card($product, $index === 0); ?>
                 <?php endforeach; ?>
             </div>
 
             <?php
-            $disclaimer = (string) apply_filters('gr_card_disclaimer', '');
+            $disclaimer = (string) apply_filters('cwebpf_card_disclaimer', '');
             if ($disclaimer !== ''):
             ?>
-                <div class="gr-disclaimer">
+                <div class="cwebpf-disclaimer">
                     <p><?php echo esc_html($disclaimer); ?></p>
                 </div>
             <?php endif; ?>
@@ -146,28 +146,28 @@ class GR_Shortcode_Handler {
 
     private function render_single_card(array $product, bool $is_featured): void {
         $card_class = $is_featured
-            ? 'gr-product-card gr-product-card--featured'
-            : 'gr-product-card';
+            ? 'cwebpf-product-card cwebpf-product-card--featured'
+            : 'cwebpf-product-card';
 
-        $cta_label = $product['cta_label'] !== '' ? $product['cta_label'] : __('Add to cart', 'product-finder-for-gravity-forms');
+        $cta_label = $product['cta_label'] !== '' ? $product['cta_label'] : __('Add to cart', 'cweb-product-finder-for-gravity-forms');
         $cta_url = $product['payment_url'] !== '' ? $product['payment_url'] : ($product['page_url'] !== '' ? $product['page_url'] : '#');
         ?>
         <div class="<?php echo esc_attr($card_class); ?>">
             <?php if ($is_featured): ?>
-                <div class="gr-badge"><?php esc_html_e('Our recommendation', 'product-finder-for-gravity-forms'); ?></div>
+                <div class="cwebpf-badge"><?php esc_html_e('Our recommendation', 'cweb-product-finder-for-gravity-forms'); ?></div>
             <?php endif; ?>
 
-            <div class="gr-product-content">
-                <h3 class="gr-product-title"><?php echo esc_html($product['name']); ?></h3>
+            <div class="cwebpf-product-content">
+                <h3 class="cwebpf-product-title"><?php echo esc_html($product['name']); ?></h3>
 
                 <?php if ($product['price_label'] !== ''): ?>
-                    <div class="gr-product-price">
-                        <span class="gr-price-amount"><?php echo esc_html($product['price_label']); ?></span>
+                    <div class="cwebpf-product-price">
+                        <span class="cwebpf-price-amount"><?php echo esc_html($product['price_label']); ?></span>
                     </div>
                 <?php endif; ?>
 
                 <?php if (!empty($product['features'])): ?>
-                    <ul class="gr-product-features">
+                    <ul class="cwebpf-product-features">
                         <?php foreach ($product['features'] as $feature): ?>
                             <li><?php echo esc_html($feature); ?></li>
                         <?php endforeach; ?>
@@ -175,18 +175,18 @@ class GR_Shortcode_Handler {
                 <?php endif; ?>
 
                 <?php if ($product['description'] !== ''): ?>
-                    <div class="gr-product-description">
+                    <div class="cwebpf-product-description">
                         <p><?php echo esc_html($product['description']); ?></p>
                     </div>
                 <?php endif; ?>
 
-                <a href="<?php echo esc_url($cta_url); ?>" class="gr-product-button" target="_blank" rel="noopener">
+                <a href="<?php echo esc_url($cta_url); ?>" class="cwebpf-product-button" target="_blank" rel="noopener">
                     <?php echo esc_html($cta_label); ?>
                 </a>
 
                 <?php if ($product['page_url'] !== '' && $product['page_url'] !== $cta_url): ?>
-                    <a href="<?php echo esc_url($product['page_url']); ?>" class="gr-product-details-link" target="_blank" rel="noopener">
-                        <?php esc_html_e('See details', 'product-finder-for-gravity-forms'); ?>
+                    <a href="<?php echo esc_url($product['page_url']); ?>" class="cwebpf-product-details-link" target="_blank" rel="noopener">
+                        <?php esc_html_e('See details', 'cweb-product-finder-for-gravity-forms'); ?>
                     </a>
                 <?php endif; ?>
             </div>
@@ -195,16 +195,16 @@ class GR_Shortcode_Handler {
     }
 
     private function render_error_message(): string {
-        $fallback_url = (string) apply_filters('gr_fallback_contact_url', '');
+        $fallback_url = (string) apply_filters('cwebpf_fallback_contact_url', '');
 
         ob_start();
         ?>
-        <div class="gr-error-message">
-            <h3><?php esc_html_e('We could not generate a recommendation', 'product-finder-for-gravity-forms'); ?></h3>
-            <p><?php esc_html_e('Our team will gladly help you choose the right product.', 'product-finder-for-gravity-forms'); ?></p>
+        <div class="cwebpf-error-message">
+            <h3><?php esc_html_e('We could not generate a recommendation', 'cweb-product-finder-for-gravity-forms'); ?></h3>
+            <p><?php esc_html_e('Our team will gladly help you choose the right product.', 'cweb-product-finder-for-gravity-forms'); ?></p>
             <?php if ($fallback_url !== ''): ?>
-                <a href="<?php echo esc_url($fallback_url); ?>" class="gr-contact-button">
-                    <?php esc_html_e('Contact us', 'product-finder-for-gravity-forms'); ?>
+                <a href="<?php echo esc_url($fallback_url); ?>" class="cwebpf-contact-button">
+                    <?php esc_html_e('Contact us', 'cweb-product-finder-for-gravity-forms'); ?>
                 </a>
             <?php endif; ?>
         </div>

@@ -1,18 +1,36 @@
 # Changelog
 
-All notable changes to **Product Finder for Gravity Forms** are documented here.
+All notable changes to **CWeb Product Finder for Gravity Forms** are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
+
+## [3.1.3] — 2026-05-20
+
+Second submission cycle to WordPress.org. The Plugin Review Team's automated pre-review flagged four blockers (generic name, short identifier prefix, inline `<style>`/`<script>` blocks, ownership signal). This release addresses all four.
+
+### Changed
+- **Plugin renamed** from "Product Finder for Gravity Forms" to **"CWeb Product Finder for Gravity Forms"**. The new name adds the agency's `CWeb` distinctive identifier at the start, per WP.org guideline: a plugin name must be distinctive, not just descriptive, even when using the `<feature> for <brand>` pattern.
+- **Identifier prefix lengthened**: `GR_` / `gr_` / `.gr-` / `--gr-` (2 chars) renamed to `CWebPF_` / `CWEBPF_` / `cwebpf_` / `.cwebpf-` / `--cwebpf-` (6 chars), satisfying the WP.org rule that prefixes be at least 4 characters and distinct.
+- **Shortcode renamed**: `[gravity_recommender]` → `[cwebpf_recommender]`.
+- **Slug, folder, main PHP file and text domain** updated: `product-finder-for-gravity-forms` → `cweb-product-finder-for-gravity-forms`.
+- **Plugin URI** now points to `github.com/collectifweb/CWeb-Product-Finder-for-Gravity-Forms`.
+- **Contributors list** in readme.txt now includes both `collectifweb` and `alexandreminem` (the WordPress.org account that submits the plugin).
+
+### Fixed
+- **No more inline `<style>` or `<script>` blocks**. All six occurrences (`class-admin-help.php`, `class-admin-onboarding.php` ×2, `class-product-cpt.php`, `class-admin-rules.php` ×2) moved to separate asset files (`assets/css/admin.css`, `assets/js/admin-rules.js`, `assets/js/admin-onboarding.js`) registered via `wp_enqueue_style` / `wp_enqueue_script`. JS strings now pass through `wp_localize_script`. Each asset is conditionally enqueued only on the admin screen that needs it.
+
+### Removed
+- All `_gr_*` post meta keys (renamed to `_cwebpf_*`). Since the plugin was never approved on WP.org and only existed in beta, no migration path is provided. Fresh installs only.
 
 ## [3.1.2] — 2026-05-19
 
 ### Changed — WordPress.org submission preparation
-- **Plugin renamed** from "Gravity Recommender" to **"Product Finder for Gravity Forms"** to comply with the WordPress.org Plugin Directory naming guidelines (third-party-trademark prefix not allowed; `<feature> for <brand>` is the supported pattern).
+- **Plugin renamed** from "Gravity Recommender" to **"CWeb Product Finder for Gravity Forms"** to comply with the WordPress.org Plugin Directory naming guidelines (third-party-trademark prefix not allowed; `<feature> for <brand>` is the supported pattern).
 - Slug, folder, text domain, plugin URI and all human-readable mentions updated accordingly.
-- Filter renamed: `gr_gravityforms_affiliate_url` → `gr_gravityforms_url`.
+- Filter renamed: `cwebpf_gravityforms_affiliate_url` → `cwebpf_gravityforms_url`.
 
 ### Fixed
 - Self-referencing CSS custom properties in `:root` — default colors/fonts now render even when the theme doesn't override them.
-- Replaced `(int) wp_unslash(...)` with `absint(wp_unslash(...))` on `$_POST['gr_form_id']` and `$_GET['step']` — static analyzers don't accept type casts as sanitization.
+- Replaced `(int) wp_unslash(...)` with `absint(wp_unslash(...))` on `$_POST['cwebpf_form_id']` and `$_GET['step']` — static analyzers don't accept type casts as sanitization.
 - Uniformized license string as `GPLv2 or later` across plugin header, readme.txt and LICENSE.
 - LICENSE body now explicitly states "or (at your option) any later version", matching the headers.
 
@@ -24,8 +42,8 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Hotfix release that addresses real-world testing feedback and the WordPress.org Plugin Checker.
 
 ### Fixed
-- **Critical fatal on Setup step 3 ("Products")** — `GR_CPT_Source` was still calling `GR_Product_CPT::get_tags()`, which was removed in 3.1.0 along with the tag-based engine. Restored full compatibility.
-- Removed leftover `tags` field from the product source interface, `GR_CPT_Source`, and `GR_Woo_Source`.
+- **Critical fatal on Setup step 3 ("Products")** — `CWebPF_CPT_Source` was still calling `CWebPF_Product_CPT::get_tags()`, which was removed in 3.1.0 along with the tag-based engine. Restored full compatibility.
+- Removed leftover `tags` field from the product source interface, `CWebPF_CPT_Source`, and `CWebPF_Woo_Source`.
 
 ### Changed — WordPress.org compliance
 - Dropped `load_plugin_textdomain()` call — discouraged since WP 4.6; wordpress.org auto-loads translations.
@@ -33,7 +51,7 @@ Hotfix release that addresses real-world testing feedback and the WordPress.org 
 - `translators:` comments moved to sit immediately above the `__()` call (Help page Credits block).
 - Switched `class-product-cpt.php` save logic from dynamic `call_user_func` sanitizer to per-field explicit `sanitize_text_field(wp_unslash(...))` chains so static analysis can verify them.
 - `class-admin-rules.php` now deep-unslashes the submitted rules array with `map_deep + sanitize_text_field` before parsing.
-- `class-admin-onboarding.php` unslashes `$_POST['gr_form_id']` and properly handles `$_GET` reads (wizard step + flash messages) with explicit `phpcs:ignore` comments on display-only paths after a `wp_safe_redirect`.
+- `class-admin-onboarding.php` unslashes `$_POST['cwebpf_form_id']` and properly handles `$_GET` reads (wizard step + flash messages) with explicit `phpcs:ignore` comments on display-only paths after a `wp_safe_redirect`.
 
 ## [3.1.0] — 2026-05-19
 
@@ -46,8 +64,8 @@ Second iteration based on real-world testing feedback. Scoring model rewritten f
 - **Four effects per rule** : `Boost` (+N points), `Penalize` (−N points), `Exclude` (hard filter), `Require` (only required products are eligible).
 - **Auto-detection of hidden fields** in the configured Gravity Form. One field → selected automatically. Multiple → user picks. Zero → instructions to add one.
 - **Restricted-answer fields only** — rule builder ignores free-text fields, only exposes radio/dropdown/checkbox/multiselect with their actual choices.
-- **Affiliate CTA when Gravity Forms is missing** — wizard halts gracefully with a `Get Gravity Forms` button (filter `gr_gravityforms_url` for the URL).
-- **AI fallback hook** (`gr_ai_fallback_recommendation`) — architecture-ready for plugging an AI service when no rule matches. No built-in implementation.
+- **Affiliate CTA when Gravity Forms is missing** — wizard halts gracefully with a `Get Gravity Forms` button (filter `cwebpf_gravityforms_url` for the URL).
+- **AI fallback hook** (`cwebpf_ai_fallback_recommendation`) — architecture-ready for plugging an AI service when no rule matches. No built-in implementation.
 
 ### Changed
 - **Scoring engine rewritten** — rules now target products **by ID** directly instead of going through tags. More intuitive and easier to author.
@@ -64,13 +82,13 @@ Second iteration based on real-world testing feedback. Scoring model rewritten f
 First general-purpose release.
 
 ### Added
-- `gr_product` Custom Post Type for managing recommended products from the WP admin.
+- `cwebpf_product` Custom Post Type for managing recommended products from the WP admin.
 - WooCommerce product source (uses the native `product_tag` taxonomy for tagging).
-- Source abstraction (`GR_Product_Source`) — implementations: `GR_CPT_Source`, `GR_Woo_Source`.
+- Source abstraction (`CWebPF_Product_Source`) — implementations: `CWebPF_CPT_Source`, `CWebPF_Woo_Source`.
 - Tag-based scoring engine — admin-defined rules.
 - 5-step setup wizard under **Recommender → Setup**.
 - Example Gravity Form importer in the wizard.
-- CSS custom properties for theming (`--gr-primary`, `--gr-accent`, `--gr-font-heading`, etc.).
-- Filters: `gr_form_id`, `gr_field_id`, `gr_recommendation_explanation`, `gr_card_disclaimer`, `gr_fallback_contact_url`.
+- CSS custom properties for theming (`--cwebpf-primary`, `--cwebpf-accent`, `--cwebpf-font-heading`, etc.).
+- Filters: `cwebpf_form_id`, `cwebpf_field_id`, `cwebpf_recommendation_explanation`, `cwebpf_card_disclaimer`, `cwebpf_fallback_contact_url`.
 - `readme.txt` in the format expected by wordpress.org.
 - `LICENSE` (GPL v2 or later).
