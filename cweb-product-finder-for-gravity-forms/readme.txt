@@ -77,10 +77,12 @@ Recommendation rules: `wp_options` (`cwebpf_scoring_rules`, `cwebpf_form_config`
 
 == Screenshots ==
 
-1. The 5-step setup wizard.
-2. Editing a recommended product.
-3. Scoring rules editor with AND/OR conditions and four effects (Boost / Penalize / Exclude / Require) per rule.
-4. Sample recommendation cards on the form confirmation page.
+1. Setup wizard — welcome screen with automatic system check (Gravity Forms / WooCommerce detection).
+2. Setup wizard — pick the Gravity Form to listen to; the hidden field that stores the JSON result is auto-detected.
+3. Setup wizard — done. The shortcode is generated and ready to paste in the form confirmation message.
+4. Add a product (built-in CPT) with price label, short description, features, page URL, payment URL and CTA label.
+5. Scoring rules editor — combine "When" conditions (radio / dropdown / checkbox answers, AND/OR) with "Then" effects: Boost, Penalize, Exclude or Require a product.
+6. Built-in Help &amp; About page — describes the scoring model, the shortcode, and the available developer filters.
 
 == Changelog ==
 
