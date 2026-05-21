@@ -1,5 +1,5 @@
 === CWeb Product Finder for Gravity Forms ===
-Contributors: collectifweb, alexandreminem
+Contributors: alexandreminem
 Tags: gravity forms, recommendation, product finder, scoring, quiz
 Requires at least: 6.0
 Tested up to: 6.9
@@ -88,7 +88,6 @@ Recommendation rules: `wp_options` (`cwebpf_scoring_rules`, `cwebpf_form_config`
 * Plugin renamed to "CWeb Product Finder for Gravity Forms" with a distinctive `cweb-` prefix per WordPress.org naming guidelines.
 * All internal identifiers (functions, classes, constants, options, post meta, CSS classes, CSS variables, filters, shortcode) renamed from `gr_*` / `GR_*` / `.gr-*` to `cwebpf_*` / `CWEBPF_*` / `CWebPF_*` / `.cwebpf-*` to satisfy the 4+ character prefix rule.
 * All inline `<style>` and `<script>` blocks moved to standalone files in `assets/css/admin.css`, `assets/js/admin-rules.js`, and `assets/js/admin-onboarding.js`, registered via `wp_enqueue_style`, `wp_enqueue_script`, and localized with `wp_localize_script`. Each asset is conditionally loaded only on its own admin screen.
-* Contributors list now includes both `collectifweb` and `alexandreminem` (the WordPress.org account that submits the plugin).
 * Shortcode renamed: `[gravity_recommender]` → `[cwebpf_recommender]`.
 
 = 3.1.2 =
