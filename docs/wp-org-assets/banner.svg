@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1544 500" width="1544" height="500">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0a3a5f"/>
+      <stop offset="60%" stop-color="#135e96"/>
+      <stop offset="100%" stop-color="#2271b1"/>
+    </linearGradient>
+    <linearGradient id="iconGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.06"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect x="0" y="0" width="1544" height="500" fill="url(#bgGrad)"/>
+
+  <!-- Subtle decorative circles right side -->
+  <circle cx="1400" cy="120" r="180" fill="#ffffff" opacity="0.04"/>
+  <circle cx="1480" cy="400" r="120" fill="#ffffff" opacity="0.05"/>
+  <circle cx="1260" cy="380" r="60" fill="#c04e2f" opacity="0.18"/>
+
+  <!-- Icon block left -->
+  <g transform="translate(180 250)">
+    <rect x="-130" y="-130" width="260" height="260" rx="48" ry="48" fill="url(#iconGrad)" stroke="#ffffff" stroke-opacity="0.25" stroke-width="2"/>
+    <g transform="translate(0 0)">
+      <rect x="-78" y="-72" width="156" height="22" rx="11" fill="#ffffff" opacity="0.95"/>
+      <rect x="-52" y="-32" width="104" height="22" rx="11" fill="#ffffff" opacity="0.85"/>
+      <rect x="-26" y="8" width="52" height="22" rx="11" fill="#ffffff" opacity="0.75"/>
+      <circle cx="0" cy="60" r="14" fill="#c04e2f"/>
+      <circle cx="0" cy="60" r="6" fill="#ffffff"/>
+    </g>
+  </g>
+
+  <!-- Wordmark -->
+  <g transform="translate(380 200)" font-family="'DejaVu Sans', 'Helvetica Neue', Arial, sans-serif">
+    <text x="0" y="0" font-size="76" font-weight="800" fill="#ffffff" letter-spacing="-1">CWeb Product Finder</text>
+    <text x="0" y="60" font-size="40" font-weight="400" fill="#ffffff" opacity="0.78" letter-spacing="0.5">for Gravity Forms</text>
+
+    <!-- Accent line -->
+    <rect x="0" y="92" width="80" height="4" fill="#c04e2f"/>
+
+    <!-- Tagline -->
+    <text x="0" y="138" font-size="26" font-weight="400" fill="#ffffff" opacity="0.72">Rules-based product recommendations. No API. No tracking.</text>
+  </g>
+</svg>
