@@ -154,9 +154,8 @@ class CWebPF_Recommendation_Engine {
         if (!is_array($rule)) {
             return null;
         }
-        $rule['condition_logic'] = in_array($rule['condition_logic'] ?? 'all', ['all', 'any'], true)
-            ? $rule['condition_logic']
-            : 'all';
+        $logic = $rule['condition_logic'] ?? 'all';
+        $rule['condition_logic'] = in_array($logic, ['all', 'any'], true) ? $logic : 'all';
         $rule['conditions'] = is_array($rule['conditions'] ?? null) ? $rule['conditions'] : [];
         $rule['effects']    = is_array($rule['effects'] ?? null)    ? $rule['effects']    : [];
 

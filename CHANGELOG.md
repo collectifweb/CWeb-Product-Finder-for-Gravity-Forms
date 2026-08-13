@@ -3,6 +3,19 @@
 All notable changes to **CWeb Product Finder for Gravity Forms** are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [3.1.4] — 2026-08-13
+
+WordPress 7.1 compatibility pass, ahead of the August 19 release. Verified on a local WordPress 7.1-RC3 install (PHP 8.3, SQLite, Gravity Forms active) driven through a real browser: the five admin screens, the product meta box save round-trip, the example-form import, the scoring engine and the front-end shortcode all ran with `WP_DEBUG` on and produced zero PHP notices and zero JavaScript errors.
+
+None of the seven changes announced in the 7.1 field guide touch this plugin: the `cwebpf_product` post type is declared `show_in_rest => false` without `editor` support, so it never opens the block editor; the plugin ships no jQuery dependency, no `@wordpress/components` code, no media hook and no toolbar item. Confirmed empirically — the 7.1 editor canvas iframe loads no plugin asset, and neither does the block editor page itself.
+
+### Changed
+- `Tested up to` raised from 6.9 to **7.1** in `readme.txt`.
+- `import_example_form()` now reads the bundled JSON through `wp_json_file_decode()` instead of `file_get_contents()` + `json_decode()`. Clears the only warning left by the Plugin Check static sniffs, and drops four lines.
+
+### Fixed
+- **PHP warning "Undefined array key `condition_logic`"** in `CWebPF_Recommendation_Engine::normalize_rule()`. The guard read the key through `??` inside the `in_array()` test but then re-read it unguarded in the ternary's true branch, so a rule saved without the AND/OR setting emitted a warning and stored `null` instead of the intended `'all'` default.
+
 ## [3.1.3] — 2026-05-20
 
 Second submission cycle to WordPress.org. The Plugin Review Team's automated pre-review flagged four blockers (generic name, short identifier prefix, inline `<style>`/`<script>` blocks, ownership signal). This release addresses all four.

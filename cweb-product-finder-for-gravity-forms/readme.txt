@@ -2,9 +2,9 @@
 Contributors: alexandreminem
 Tags: gravity forms, recommendation, product finder, scoring, quiz
 Requires at least: 6.0
-Tested up to: 6.9
+Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 3.1.3
+Stable tag: 3.1.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -86,6 +86,11 @@ Recommendation rules: `wp_options` (`cwebpf_scoring_rules`, `cwebpf_form_config`
 
 == Changelog ==
 
+= 3.1.4 =
+* Tested against WordPress 7.1 on PHP 8.3. No code change was required for the 7.1 editor iframe, client-side media processing, jQuery UI 1.14.2 or the persistent toolbar: the plugin registers no block-editor asset, no jQuery dependency and no media hook.
+* Fixed a PHP warning ("Undefined array key condition_logic") raised by the scoring engine when a stored rule predates the AND/OR condition logic setting.
+* Replaced `file_get_contents()` with `wp_json_file_decode()` when importing the bundled example form, clearing the last Plugin Check warning.
+
 = 3.1.3 =
 * Plugin renamed to "CWeb Product Finder for Gravity Forms" with a distinctive `cweb-` prefix per WordPress.org naming guidelines.
 * All internal identifiers (functions, classes, constants, options, post meta, CSS classes, CSS variables, filters, shortcode) renamed from `gr_*` / `GR_*` / `.gr-*` to `cwebpf_*` / `CWEBPF_*` / `CWebPF_*` / `.cwebpf-*` to satisfy the 4+ character prefix rule.
@@ -123,6 +128,9 @@ Recommendation rules: `wp_options` (`cwebpf_scoring_rules`, `cwebpf_form_config`
 * CSS variables for theming.
 
 == Upgrade Notice ==
+
+= 3.1.4 =
+Compatibility release for WordPress 7.1. Drop-in upgrade from 3.1.3, no configuration change needed.
 
 = 3.1.3 =
 Plugin renamed to "CWeb Product Finder for Gravity Forms" and all internal identifiers re-prefixed. This is NOT a drop-in upgrade from 3.1.x: stored options, post meta keys, shortcode name, and filter hooks were renamed. Fresh installs only.

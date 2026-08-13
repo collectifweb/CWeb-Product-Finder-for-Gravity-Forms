@@ -112,7 +112,7 @@ CSS classes are prefixed `.cwebpf-*`. Colors and fonts are CSS custom properties
 
 ## Requirements
 
-- WordPress 6.0+
+- WordPress 6.0+ (tested up to 7.1)
 - PHP 8.0+
 - [Gravity Forms](https://www.gravityforms.com/) 2.9+
 

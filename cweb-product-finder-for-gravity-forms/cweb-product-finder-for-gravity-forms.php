@@ -3,7 +3,7 @@
  * Plugin Name: CWeb Product Finder for Gravity Forms
  * Plugin URI: https://github.com/collectifweb/CWeb-Product-Finder-for-Gravity-Forms
  * Description: Recommend products at the end of a Gravity Forms questionnaire. Rules-based scoring engine targeting products directly. No external API. Works with the built-in product CPT or WooCommerce.
- * Version: 3.1.3
+ * Version: 3.1.4
  * Author: Collectif WEB
  * Author URI: https://collectif-web.ca
  * License: GPLv2 or later
@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('CWEBPF_VERSION', '3.1.3');
+define('CWEBPF_VERSION', '3.1.4');
 define('CWEBPF_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('CWEBPF_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('CWEBPF_PLUGIN_FILE', __FILE__);

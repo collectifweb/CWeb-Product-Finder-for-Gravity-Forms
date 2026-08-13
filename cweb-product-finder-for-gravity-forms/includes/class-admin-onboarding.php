@@ -470,11 +470,7 @@ class CWebPF_Admin_Onboarding {
         if (!file_exists($json_path)) {
             return false;
         }
-        $json = file_get_contents($json_path);
-        if (!$json) {
-            return false;
-        }
-        $data = json_decode($json, true);
+        $data = wp_json_file_decode($json_path, ['associative' => true]);
         if (!is_array($data)) {
             return false;
         }
