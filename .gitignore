@@ -15,6 +15,10 @@ node_modules/
 vendor/
 *.log
 
+# Outil de déploiement SVN + sa copie de travail (perso, on ne les expose pas)
+docs/svn-deploy.sh
+.svn-wporg/
+
 # WP.org Plugin Checker reports (diagnostic exports)
 gravity-recommender-*.json
 product-finder-for-gravity-forms-*.json
