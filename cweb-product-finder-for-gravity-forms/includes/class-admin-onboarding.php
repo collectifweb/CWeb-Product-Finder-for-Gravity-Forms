@@ -1,6 +1,6 @@
 <?php
 /**
- * Onboarding admin pour Product Finder for Gravity Forms.
+ * Onboarding admin pour CWeb Product Finder for Gravity Forms.
  *
  * 4 étapes effectives + un récap (les règles de scoring ont leur propre page) :
  *
@@ -63,7 +63,7 @@ class CWebPF_Admin_Onboarding {
         ?>
         <div class="notice notice-info">
             <p>
-                <strong>Product Finder for Gravity Forms</strong> —
+                <strong>CWeb Product Finder for Gravity Forms</strong> —
                 <?php esc_html_e('Finish the setup to start recommending products.', 'cweb-product-finder-for-gravity-forms'); ?>
                 <a href="<?php echo esc_url($url); ?>" class="button button-primary" style="margin-left: 10px;">
                     <?php esc_html_e('Open setup wizard', 'cweb-product-finder-for-gravity-forms'); ?>
@@ -150,7 +150,7 @@ class CWebPF_Admin_Onboarding {
         ];
         ?>
         <div class="wrap cwebpf-onboarding">
-            <h1><?php esc_html_e('Product Finder for Gravity Forms — Setup', 'cweb-product-finder-for-gravity-forms'); ?></h1>
+            <h1><?php esc_html_e('CWeb Product Finder for Gravity Forms — Setup', 'cweb-product-finder-for-gravity-forms'); ?></h1>
 
             <ol class="cwebpf-steps">
                 <?php foreach ($steps as $n => $label): ?>
@@ -199,7 +199,7 @@ class CWebPF_Admin_Onboarding {
         $gf_url = apply_filters('cwebpf_gravityforms_url', self::GF_DEFAULT_URL);
         ?>
         <h2><?php esc_html_e('Welcome', 'cweb-product-finder-for-gravity-forms'); ?></h2>
-        <p><?php esc_html_e('Product Finder for Gravity Forms plugs into a Gravity Forms questionnaire and recommends products to the visitor based on their answers. The scoring engine runs locally — no external API.', 'cweb-product-finder-for-gravity-forms'); ?></p>
+        <p><?php esc_html_e('CWeb Product Finder for Gravity Forms plugs into a Gravity Forms questionnaire and recommends products to the visitor based on their answers. The scoring engine runs locally — no external API.', 'cweb-product-finder-for-gravity-forms'); ?></p>
 
         <h3><?php esc_html_e('System check', 'cweb-product-finder-for-gravity-forms'); ?></h3>
         <ul style="line-height: 2;">
@@ -222,7 +222,7 @@ class CWebPF_Admin_Onboarding {
         <?php if (!$gf_active): ?>
             <div class="cwebpf-callout cwebpf-callout--warning">
                 <h3 style="margin-top:0;"><?php esc_html_e('You need Gravity Forms first', 'cweb-product-finder-for-gravity-forms'); ?></h3>
-                <p><?php esc_html_e('Gravity Forms is a commercial plugin (the engine that runs your questionnaire). Product Finder for Gravity Forms is the companion that handles the recommendation logic at the end of the form.', 'cweb-product-finder-for-gravity-forms'); ?></p>
+                <p><?php esc_html_e('Gravity Forms is a commercial plugin (the engine that runs your questionnaire). CWeb Product Finder for Gravity Forms is the companion that handles the recommendation logic at the end of the form.', 'cweb-product-finder-for-gravity-forms'); ?></p>
                 <p>
                     <a href="<?php echo esc_url($gf_url); ?>" class="button button-primary" target="_blank" rel="noopener">
                         <?php esc_html_e('Get Gravity Forms →', 'cweb-product-finder-for-gravity-forms'); ?>

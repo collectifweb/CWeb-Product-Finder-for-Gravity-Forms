@@ -15,6 +15,7 @@ None of the seven changes announced in the 7.1 field guide touch this plugin: th
 
 ### Fixed
 - **PHP warning "Undefined array key `condition_logic`"** in `CWebPF_Recommendation_Engine::normalize_rule()`. The guard read the key through `??` inside the `in_array()` test but then re-read it unguarded in the ternary's true branch, so a rule saved without the AND/OR setting emitted a warning and stored `null` instead of the intended `'all'` default.
+- **Stale plugin name in the setup wizard.** Five strings in `class-admin-onboarding.php` (page title, admin notice, two descriptions, one file header) still read "Product Finder for Gravity Forms", the name used before the 3.1.3 rename. They now read "CWeb Product Finder for Gravity Forms", matching the plugin header, `readme.txt` and the WordPress.org listing.
 
 ## [3.1.3] — 2026-05-20
 

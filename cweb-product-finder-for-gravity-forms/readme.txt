@@ -90,6 +90,7 @@ Recommendation rules: `wp_options` (`cwebpf_scoring_rules`, `cwebpf_form_config`
 * Tested against WordPress 7.1 on PHP 8.3. No code change was required for the 7.1 editor iframe, client-side media processing, jQuery UI 1.14.2 or the persistent toolbar: the plugin registers no block-editor asset, no jQuery dependency and no media hook.
 * Fixed a PHP warning ("Undefined array key condition_logic") raised by the scoring engine when a stored rule predates the AND/OR condition logic setting.
 * Replaced `file_get_contents()` with `wp_json_file_decode()` when importing the bundled example form, clearing the last Plugin Check warning.
+* The setup wizard and its admin notice now show the current plugin name. Five strings still carried the pre-3.1.3 name "Product Finder for Gravity Forms".
 
 = 3.1.3 =
 * Plugin renamed to "CWeb Product Finder for Gravity Forms" with a distinctive `cweb-` prefix per WordPress.org naming guidelines.
