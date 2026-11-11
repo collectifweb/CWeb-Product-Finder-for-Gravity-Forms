@@ -3,6 +3,14 @@
 All notable changes to **CWeb Product Finder for Gravity Forms** are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## WordPress 7.2 readme update — 2026-11-11 (no new version)
+
+`Tested up to` raised from 7.1 to **7.2** in `readme.txt`. Readme-only change, applied to `trunk/` and to the published `tags/3.1.4/`: the code and the version number (3.1.4) are unchanged.
+
+Verified on two local installs (PHP 8.3, SQLite, Gravity Forms 3.2.1), WordPress 7.1.4 and 7.2-beta5, driven through a real browser with `WP_DEBUG` on: dashboard notice, plugin row, all five setup wizard steps, the product meta box save round-trip (three products, six fields each), the example-form import with hidden-field auto-detection, the Scoring Rules editor (three rules saved and compared field by field with the stored option), the Help page, and three front-end submissions (two regular, one AJAX) checked against the expected cards and the JSON stored in the hidden field, plus the button labels and links on one of them. 69 checks per version, all passed; no PHP notice in `debug.log`; no JavaScript error on the final run of each version. The block editor loads no plugin asset. Plugin Check 2.2.0 on both installs, all five categories, errors and warnings: no findings.
+
+WordPress 7.2 draws the core admin menu icons as inline SVG instead of Dashicons. The plugin's `dashicons-awards` menu icon still renders on 7.2-beta5 through the Dashicons font, in the older filled style.
+
 ## [3.1.4] — 2026-08-13
 
 WordPress 7.1 compatibility pass, ahead of the August 19 release. Verified on a local WordPress 7.1-RC3 install (PHP 8.3, SQLite, Gravity Forms active) driven through a real browser: the five admin screens, the product meta box save round-trip, the example-form import, the scoring engine and the front-end shortcode all ran with `WP_DEBUG` on and produced zero PHP notices and zero JavaScript errors.
